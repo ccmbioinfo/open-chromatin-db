@@ -11,16 +11,18 @@ db = MySQLdb.connect(user="root",
 cursor = db.cursor()
 
 # Name of table to be created
-table_name = "bed1"
+table_name = "bed2"
+directory = "/home/samfeng/bed/"
 
 # Create table
 cursor.execute("CREATE TABLE `{0}` (id int not null)".format(table_name))
 
-# Create an array storing the list of BED files - directory should be changed
+# Create an array storing the list of BED files
 bed_array = []
-for x in os.listdir('/home/samfeng/bed/'):
+for x in os.listdir(directory):
   if x.endswith('.bed'):
-    bed_array.append(x) 
+    bed_array.append(directory + x)
+    print bed_array
 
 # Determine the data headers and add to MySQL database
 with open(bed_array[0]) as f:
