@@ -4,6 +4,11 @@ import '../css/query.css';
 class Query extends Component {
   constructor() {
     super();
+    this.state = {
+      'chr': '',
+      'start': '', 
+      'end': ''
+    };
     this.submitQuery = this.submitQuery.bind(this);
     this.handleChrChange = this.handleChrChange.bind(this);
     this.handleStartChange = this.handleStartChange.bind(this);
@@ -35,6 +40,7 @@ class Query extends Component {
         'end': this.state.end
       }) 
     });
+
   }
   
   render() {
