@@ -21,14 +21,19 @@ class Query extends Component {
   submitQuery(e) {
     e.preventDefault();
     var input = this.state.input.toLowerCase();
-    if (input.includes(":"))
-      var position = input.substring(input.indexOf(":"));
-      this.setState({'chr': input.substring(0, input.indexOf(":"))});
-    if (input.includes("-")) {
-      console.log(position.substring(1, position.indexOf("-")));
-      this.setState({'start': position.substring(1, position.indexOf("-"))});
-      this.setState({'end': position.substring(position.indexOf("-")+1)});
-    } 
+    if (input.includes(":")) {
+        var position = input.substring(input.indexOf(":"));
+        this.setState({'chr': input.substring(0, input.indexOf(":"))});
+      if (input.includes("-")) {
+        this.setState({'start': position.substring(1, position.indexOf("-"))});
+        this.setState({'end': position.substring(position.indexOf("-")+1)});
+      } else {
+        this.setState({'start': position.substring(1)});
+        this.setState({'end': position.substring(1)});
+      }
+    } else {
+      this.setState({'chr': input});
+    }
     fetch('/query', {
       headers: new Headers({
         'Content-Type': 'application/json'
