@@ -5,30 +5,30 @@ class Query extends Component {
   constructor() {
     super();
     this.state = {
+      'input': '',
       'chr': '',
       'start': '', 
       'end': ''
     };
     this.submitQuery = this.submitQuery.bind(this);
-    this.handleChrChange = this.handleChrChange.bind(this);
-    this.handleStartChange = this.handleStartChange.bind(this);
-    this.handleEndChange = this.handleEndChange.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
   
-  handleChrChange(event) {
-    this.setState({chr: event.target.value});
-  }
-  
-  handleStartChange(event) {
-    this.setState({start: event.target.value});
-  }
-  
-  handleEndChange(event) {
-    this.setState({end: event.target.value});
+  handleInputChange(event) {
+    this.setState({input: event.target.value});
   }
   
   submitQuery(e) {
     e.preventDefault();
+    var input = this.state.input.toLowerCase();
+    if (input.includes(":"))
+      var position = input.substring(input.indexOf(":"));
+      this.setState({'chr': input.substring(0, input.indexOf(":"))});
+    if (input.includes("-")) {
+      console.log(position.substring(1, position.indexOf("-")));
+      this.setState({'start': position.substring(1, position.indexOf("-"))});
+      this.setState({'end': position.substring(position.indexOf("-")+1)});
+    } 
     fetch('/query', {
       headers: new Headers({
         'Content-Type': 'application/json'
@@ -40,7 +40,6 @@ class Query extends Component {
         'end': this.state.end
       }) 
     });
-
   }
   
   render() {
@@ -49,16 +48,8 @@ class Query extends Component {
         <div className="Query-intro">
           <form onSubmit={this.submitQuery}>
             <label>
-              Chromosome:
-              <input type="text" onChange={this.handleChrChange}/>
-            </label>
-            <label>
-              Start Position:
-              <input type="text" onChange={this.handleStartChange}/>
-            </label>
-            <label>
-              End Position:
-              <input type="text" onChange={this.handleEndChange}/>
+              Chromosome: Start Position-End Position
+              <input type="text" onChange={this.handleInputChange}/>
             </label>
             <input type="submit" />
           </form>
