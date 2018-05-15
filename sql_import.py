@@ -22,13 +22,12 @@ bed_array = []
 for x in os.listdir(directory):
   if x.endswith('.bed'):
     bed_array.append(directory + x)
-    print bed_array
 
 # Determine the data headers and add to MySQL database
 with open(bed_array[0]) as f:
   reader = csv.reader(f, delimiter='\t')
   header = next(reader)
-
+  
 for x in header:
   cursor.execute("ALTER TABLE {0} ADD `{1}` text".format(table_name, x) ) 
 

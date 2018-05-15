@@ -1,6 +1,18 @@
 var mysql = require('mysql');
 var express = require('express');
 var bodyParser = require('body-parser');
+//var client = require('scp2');
+var fs = require('fs');
+let Client = require('ssh2-sftp-client');
+let sftp = new Client();
+sftp.connect({
+  host: '172.20.4.59',
+  port: '22',
+  username: 'samfeng',
+  password: 'xsw2XSW@'
+}).catch((err) => {
+  consol.log(err);
+});
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -19,42 +31,53 @@ connection.connect((err) => {
 app.use(bodyParser.json());
 
 app.post('/query', (req, res) => {
-  console.log(req.body);
-//  var sql = "SELECT * INTO OUTFILE '/var/lib/mysql-files/test.bed' FROM bed1";
-  var sql = "SELECT * FROM bed1";
-  var params = [];
-  if (req.body.chr || req.body.start || req.body.end) {
-    sql = sql + " WHERE";
-    if (req.body.chr) {
-      sql = sql + " `DHS.Chr`=?";
-      params.push(req.body.chr);
+  sftp.list('/var/lib/mysql-files/').then((data) => {
+    if (data.length > 0) {
+      sftp.delete('/var/lib/mysql-files/Query-result.bed');
     }
-    if (req.body.start) {
-      if (params.length != 0) {
-        sql = sql + " AND CAST(`DHS.Start` AS SIGNED)>=?";
-      } else {
-        sql = sql + " CAST(`DHS.Start` AS SIGNED)>=?";
+    console.log(req.body);
+    var sql = "SELECT * INTO OUTFILE '/var/lib/mysql-files/Query-result.bed' FROM bed1";
+    var params = [];
+    if (req.body.chr || req.body.start || req.body.end) {
+      sql = sql + " WHERE";
+      if (req.body.chr) {
+        sql = sql + " `DHS.Chr`=?";
+        params.push(req.body.chr);
       }
-      params.push(parseInt(req.body.start));
-    }
-    if (req.body.end) {
-      if (params.length != 0) {
-        sql = sql + " AND CAST(`DHS.End` AS SIGNED)<=?";
-      } else {
-        sql = sql + " CAST(`DHS.End` AS SIGNED)<=?";
+      if (req.body.start) {
+        if (params.length != 0) {
+          sql = sql + " AND CAST(`DHS.Start` AS SIGNED)>=?";
+        } else {
+          sql = sql + " CAST(`DHS.Start` AS SIGNED)>=?";
+        }
+        params.push(parseInt(req.body.start));
       }
-      params.push(parseInt(req.body.end));
+      if (req.body.end) {
+        if (params.length != 0) {
+          sql = sql + " AND CAST(`DHS.End` AS SIGNED)<=?";
+        } else {
+          sql = sql + " CAST(`DHS.End` AS SIGNED)<=?";
+        }
+        params.push(parseInt(req.body.end));
+      }
     }
-  }
-  sql = sql + " LIMIT 1";
-  console.log(sql);
-  console.log(params);
-  connection.query(sql, params, (err,rows) => {
-    if(err) throw err;
-    console.log(rows);
-    res.send(rows);
+    sql = sql + " LIMIT 1";
+    console.log(sql);
+    console.log(params);
+    connection.query(sql, params, (err,rows) => {
+      if(err) throw err;
+      console.log(rows);
+      res.send(rows);
+      sftp.get('/var/lib/mysql-files/Query-result.bed').then((stream)=> {
+        stream.pipe(fs.createWriteStream('/home/samfeng/open-chromatin-db/public/files/Query-result.bed'));
+      });
+    });
   });
 });
+
+//app.get('/export', (req, res) => {
+// 
+//});
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
