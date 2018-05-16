@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "datatables.net": "^1.10.16",
     "express": "^4.16.3",
+    "jquery": "^3.3.1",
     "mysql": "^2.15.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.10"
   },
   "scripts": {
@@ -16,5 +19,5 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy":"http://172.20.4.59:3001"
+  "proxy": "http://172.20.4.59:3001"
 }

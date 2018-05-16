@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import '../css/query.css';
 
 class Query extends Component {
   constructor() {
@@ -41,7 +40,7 @@ class Query extends Component {
       'start': start,
       'end': end
     }, function() {
-      fetch('/query', {
+      fetch('/search', {
         headers: new Headers({
           'Content-Type': 'application/json'
         }), 
@@ -58,15 +57,13 @@ class Query extends Component {
   render() {
     return (
       <div className="Query">
-        <div className="Query-intro">
-          <form onSubmit={this.handleSubmit}>
-            <label>
-              Chromosome: Start Position-End Position
-              <input type="text" onChange={this.handleInputChange} />
-            </label>
-            <input type="submit" />
-          </form>
-        </div>
+        <form onSubmit={this.handleSubmit}>
+          <label>
+            Chromosome: Start Position-End Position
+            <input type="text" onChange={this.handleInputChange} />
+          </label>
+          <input type="submit" />
+        </form>
         <div className="Query-download">
           <DownloadButton />
         </div>

@@ -1,7 +1,6 @@
 var mysql = require('mysql');
 var express = require('express');
 var bodyParser = require('body-parser');
-//var client = require('scp2');
 var fs = require('fs');
 let Client = require('ssh2-sftp-client');
 let sftp = new Client();
@@ -30,7 +29,7 @@ connection.connect((err) => {
 
 app.use(bodyParser.json());
 
-app.post('/query', (req, res) => {
+app.post('/search', (req, res) => {
   sftp.list('/var/lib/mysql-files/').then((data) => {
     if (data.length > 0) {
       sftp.delete('/var/lib/mysql-files/Query-result.bed');
