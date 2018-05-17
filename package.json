@@ -15,6 +15,7 @@
   "scripts": {
     "start": "react-scripts start",
     "serve": "nodemon app.js",
+    "jbrowse": "cd jbrowse && utils/jb_run.js -p 3002",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
