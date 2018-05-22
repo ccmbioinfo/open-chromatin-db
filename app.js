@@ -75,11 +75,10 @@ app.post('/search', (req, res) => {
 });
 
 app.get('/tabledata', (req, res) => {
-  var sql = "SELECT `DHS.Chr`, `DHS.Start`, `DHS.End` FROM bed1 LIMIT 1000"
+  var sql = "SELECT * FROM bed1 LIMIT 5000"
   connection.query(sql, (err,rows) => {
     if(err) throw err;
-    console.log(JSON.stringify(rows));
-    res.send(JSON.stringify(rows));
+    res.send(rows);
   });
 });
 

@@ -1,55 +1,53 @@
 import React, { Component } from 'react';
 
-const $ = require('jquery');
-$.DataTable = require('datatables.net');
+import { AgGridReact } from 'ag-grid-react';
+import './../css/ag-grid.css';
+import './../css/ag-theme-balham.css';
 
-const columns = [
-  {
-    title: "DHS.Chr",
-    width: 180,
-    data: "DHS\\.Chr"
-  },
-  {
-    title: "DHS.Start",
-    width: 180,
-    data: "DHS\\.Start"
-  },
-  {
-    title: "DHS.End",
-    width: 180,
-    data: "DHS\\.End"
-  },
-];
-
-class Table extends Component { 
-  componentDidMount() {
-    $(this.refs.main).DataTable({
-      "dom": '<"data-table-wrapper">',
-      "columns": columns,
-      "pageType": 'full_numbers',
-      "processing": true,
-      "serverSide": true,
-      "ajax": {
-        url: '/tabledata',
-        dataSrc: ''
-      }
-    });
-  }  
-  componentWillUnmount(){
-   $('.data-table-wrapper')
-     .find('table')
-     .DataTable()
-     .destroy(true);
+class Table extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      'columns': [],
+      'data': [],
+    };
+    this.getData = this.getData.bind(this);
   }
-  shouldComponentUpdate() {
-    return false;
+  
+  componentWillMount() {
+    this.getData();
   }
-  render() {
+  
+  getData() {
+    fetch('/tabledata')
+      .then((res) => {
+        return res.json();
+      }).then((data) => {
+        const columns = Object.keys(data[0]).map((key, id)=>{
+          return {
+            headerName: key,
+            field: key
+          }
+        });
+        this.setState({
+          columns: columns,
+          data: data
+        });
+        console.log(columns);
+      });
+  }
+  
+  render() {     
     return (
-      <div>
-        <table ref="main" />
+      <div className="ag-theme-balham">
+        <AgGridReact
+          columnDefs={this.state.columns}
+          rowData={this.state.data}
+          suppressFieldDotNotation={true}
+          pagination={true}
+        />
       </div>
-    );
+    )
   }
 }
 

@@ -8,8 +8,8 @@ class Application extends Component {
   render() {
     return(
       <BrowserRouter>
-        <div className="Application">
-          <div className="Application-header">
+        <div className="application">
+          <div className="application-header">
               <h1>Open Chromatin Database</h1>
           </div>
           <div className="nav">
@@ -19,9 +19,11 @@ class Application extends Component {
               <li><Link to="/table">Table</Link></li>
             </ul>
           </div>
-          <Route path="/query" component={Query} />
-          <Route path="/tracks" component={Tracks} />
-          <Route path="/table" component={Table} />
+          <div className="tab-content">
+            <Route path="/query" component={Query} />
+            <Route path="/tracks" component={Tracks} />
+            <Route path="/table" component={Table} />
+          </div>
         </div>
       </BrowserRouter>
     );
