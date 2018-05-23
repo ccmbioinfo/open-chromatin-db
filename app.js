@@ -35,7 +35,7 @@ app.post('/search', (req, res) => {
       sftp.delete('/var/lib/mysql-files/Query-result.bed');
     }
     console.log(req.body);
-    var sql = "SELECT * FROM headers UNION SELECT * INTO OUTFILE '/var/lib/mysql-files/Query-result.bed' FROM bed1";
+    var sql = "SELECT * FROM headers UNION SELECT * INTO OUTFILE '/var/lib/mysql-files/Query-result.bed' FROM bed";
     var params = [];
     if (req.body.chr || req.body.start || req.body.end) {
       sql = sql + " WHERE";
@@ -75,7 +75,7 @@ app.post('/search', (req, res) => {
 });
 
 app.get('/tabledata', (req, res) => {
-  var sql = "SELECT * FROM bed1 LIMIT 5000"
+  var sql = "SELECT * FROM bed LIMIT 5000"
   connection.query(sql, (err,rows) => {
     if(err) throw err;
     res.send(rows);
