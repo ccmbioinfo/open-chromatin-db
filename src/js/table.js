@@ -43,8 +43,10 @@ class Table extends Component {
         <AgGridReact
           columnDefs={this.state.columns}
           rowData={this.state.data}
-          suppressFieldDotNotation={true}
+          enableSorting={true}
+          enableFilter={true}
           pagination={true}
+          suppressFieldDotNotation={true}
         />
       </div>
     )
