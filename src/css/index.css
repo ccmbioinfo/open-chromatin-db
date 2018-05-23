@@ -68,3 +68,24 @@ input {
   height: 100%;
   width: 100%;
 }
+
+.btn {
+  background: #1abc9c;
+  border-bottom: #16a085 3px solid;
+  border-left: #16a085 1px solid;
+  border-top: none;
+  border-right: #16a085 1px solid;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-size: small;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.help {
+  font-size: small;
+  font-style: italic;
+  margin-top: 0.5em;
+}

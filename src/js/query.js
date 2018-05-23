@@ -7,8 +7,7 @@ class Query extends Component {
       'input': '',
       'chr': '',
       'start': '', 
-      'end': '',
-      'showDownload': false
+      'end': ''
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -49,22 +48,25 @@ class Query extends Component {
           'chr': this.state.chr,
           'start': this.state.start,
           'end': this.state.end
-        }) 
+        })
+      }).catch(error => {
+        throw(error);
       });
     });
   }
   
-  render() {
+  render() {  
     return (
-      <div className="Query">
+      <div className="query">
         <form onSubmit={this.handleSubmit}>
           <label>
-            Chromosome: Start Position-End Position
+            Region of Interest:
             <input type="text" onChange={this.handleInputChange} />
+            <p className="help">Please format input as following: {"\n"} Chromosome:StartPos-EndPos</p>
           </label>
-          <input type="submit" />
+          <input className="btn" type="submit" />
         </form>
-        <div className="Query-download">
+        <div className="query-download">
           <DownloadButton />
         </div>
       </div>
@@ -75,7 +77,7 @@ class Query extends Component {
 class DownloadButton extends Component {
   render() {
     return (
-      <a href={window.location.origin + "/files/Query-result.bed"} download="Query-result.bed">Download</a>
+      <a className="btn" href={window.location.origin + "/files/Query-result.bed"} download="Query-result.bed">Download</a>
     )
   }
 }

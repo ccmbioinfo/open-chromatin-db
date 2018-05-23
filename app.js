@@ -3,6 +3,8 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 let Client = require('ssh2-sftp-client');
+
+// Connect to remote server - may be useful in the future
 let sftp = new Client();
 sftp.connect({
   host: '172.20.4.59',
@@ -10,12 +12,16 @@ sftp.connect({
   username: 'samfeng',
   password: 'xsw2XSW@'
 }).catch((err) => {
-  consol.log(err);
+  console.log(err);
 });
 
+// Open Express connection on port 3001
 const app = express();
 const port = process.env.PORT || 3001;
+app.use(bodyParser.json());
+app.listen(port, () => console.log(`Listening on port ${port}`));
 
+// Open connection to MySQL database
 var connection = mysql.createConnection({
     user: 'root',
     password: 'password',
@@ -27,8 +33,7 @@ connection.connect((err) => {
   console.log('Connected!');
 });
 
-app.use(bodyParser.json());
-
+// POST query request from client
 app.post('/search', (req, res) => {
   sftp.list('/var/lib/mysql-files/').then((data) => {
     if (data.length > 0) {
@@ -74,6 +79,7 @@ app.post('/search', (req, res) => {
   });
 });
 
+// GET request for table data from server
 app.get('/tabledata', (req, res) => {
   var sql = "SELECT * FROM bed LIMIT 5000"
   connection.query(sql, (err,rows) => {
@@ -82,11 +88,6 @@ app.get('/tabledata', (req, res) => {
   });
 });
 
-//app.get('/export', (req, res) => {
-// 
-//});
-
-app.listen(port, () => console.log(`Listening on port ${port}`));
-
+// If required in the future, closes connection to MySQL database
 //connection.end((err) => {
 //});
