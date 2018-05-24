@@ -1,5 +1,5 @@
 {
   "ignore": [
-    "*/jbrowse/*"
+    "/home/samfeng/open-chromatin-db/jbrowse/*"
   ]
 }
