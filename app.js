@@ -2,18 +2,7 @@ var mysql = require('mysql');
 var express = require('express');
 var bodyParser = require('body-parser');
 var fs = require('fs');
-let Client = require('ssh2-sftp-client');
-
-// Connect to remote server - may be useful in the future
-let sftp = new Client();
-sftp.connect({
-  host: '172.20.4.59',
-  port: '22',
-  username: 'samfeng',
-  password: 'xsw2XSW@'
-}).catch((err) => {
-  console.log(err);
-});
+var tmp = require('tmp');
 
 // Open Express connection on port 3001
 const app = express();
@@ -35,13 +24,15 @@ connection.connect((err) => {
 
 // POST query request from client
 app.post('/search', (req, res) => {
-  sftp.list('/var/lib/mysql-files/').then((data) => {
-    if (data.length > 0) {
-      sftp.delete('/var/lib/mysql-files/Query-result.bed');
-    }
-    console.log(req.body);
-    var sql = "SELECT * FROM headers UNION SELECT * INTO OUTFILE '/var/lib/mysql-files/Query-result.bed' FROM bed";
+  tmp.file({prefix: 'query-', postfix: '.bed'}, function _tempFileCreated(err, path, fd, cleanupCallBack) {
+    if (err) throw err;
+    
+    var location = path.slice(path.indexOf('query-'));
+    
     var params = [];
+    
+    var sql = `SELECT * FROM headers UNION SELECT * INTO OUTFILE '/var/lib/mysql-files/${location}' FROM bed`;
+    
     if (req.body.chr || req.body.start || req.body.end) {
       sql = sql + " WHERE";
       if (req.body.chr) {
@@ -71,11 +62,10 @@ app.post('/search', (req, res) => {
     connection.query(sql, params, (err,rows) => {
       if(err) throw err;
       console.log(rows);
-      res.send(rows);
-      sftp.get('/var/lib/mysql-files/Query-result.bed').then((stream)=> {
-        stream.pipe(fs.createWriteStream('/home/samfeng/open-chromatin-db/public/files/Query-result.bed'));
-      });
+      fs.createReadStream(`/var/lib/mysql-files/${location}`).pipe(fs.createWriteStream(`/home/samfeng/open-chromatin-db/public/files/${location}`));
     });
+    res.send({url: location});
+    cleanupCallBack();
   });
 });
 

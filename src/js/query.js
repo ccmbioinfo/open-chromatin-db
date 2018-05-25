@@ -51,7 +51,15 @@ class Query extends Component {
         })
       }).catch(error => {
         throw(error);
-      });
+      }).then((res) => {
+        console.log(res);
+        return res.json();
+      }).then((data) => {
+        console.log(data);
+          this.setState({
+            'downloadUrl': data.url
+          });
+        });
     });
   }
   
@@ -67,7 +75,7 @@ class Query extends Component {
           <input className="btn" type="submit" />
         </form>
         <div className="query-download">
-          <DownloadButton />
+          <DownloadButton url={this.state.downloadUrl}/>
         </div>
       </div>
     );
@@ -77,7 +85,7 @@ class Query extends Component {
 class DownloadButton extends Component {
   render() {
     return (
-      <a className="btn" href={window.location.origin + "/files/Query-result.bed"} download="Query-result.bed">Download</a>
+      <a className="btn" href={window.location.origin + "/files/" + this.props.url} download="Query-result.bed">Download</a>
     )
   }
 }
