@@ -12,7 +12,8 @@ app.listen(port, () => console.log(`Listening on port ${port}`));
 
 // Open connection to MySQL database
 var connection = mysql.createConnection({
-    user: 'root',
+    user: 'node-user',
+    host: 'mysql',
     password: 'password',
     database: 'bed'
 });
@@ -62,7 +63,7 @@ app.post('/search', (req, res) => {
     connection.query(sql, params, (err,rows) => {
       if(err) throw err;
       console.log(rows);
-      fs.createReadStream(`/var/lib/mysql-files/${location}`).pipe(fs.createWriteStream(`/home/samfeng/open-chromatin-db/public/files/${location}`));
+      fs.createReadStream(`/var/lib/mysql-files/${location}`).pipe(fs.createWriteStream(`/home/samfeng/open-chromatin-db/client/public/files/${location}`));
     });
     res.send({url: location});
     cleanupCallBack();
