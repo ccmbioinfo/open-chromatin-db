@@ -17,7 +17,7 @@ app.listen(port, () => console.log(`Listening on port ${port}`));
 // Open connection to MySQL database
 var connection = mysql.createConnection({
     user: 'node-user',
-//    host: 'mysql',
+    host: 'mysql',
     password: 'password',
     database: 'bed'
 });
@@ -73,15 +73,6 @@ app.post('/search', (req, res) => {
     cleanupCallBack();
   });
 });
-
-//// GET request for table data from server
-//app.get('/tabledata', (req, res) => {
-//  var sql = "SELECT * FROM bed LIMIT 5000"
-//  connection.query(sql, (err,rows) => {
-//    if(err) throw err;
-//    res.send(rows);
-//  });
-//});
 
 app.post('/tabledata', (req, res) => {
   var start = req.body.start | 0;
