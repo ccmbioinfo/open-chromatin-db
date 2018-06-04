@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import './../css/datatables.min.css';
+
 const $ = require('jquery');
 $.DataTable = require('datatables.net');
 
@@ -43,6 +45,7 @@ class Table extends Component {
       columns: this.state.columns,
       ordering: false,
       serverSide: true,
+      searching: false,
       processing: true,
       paging: true,
       lengthMenu: [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
@@ -66,7 +69,7 @@ class Table extends Component {
   render() {
     return (
       <div>
-          <table ref="main" />
+          <table ref="main" className="display" />
       </div>
     )
   }
