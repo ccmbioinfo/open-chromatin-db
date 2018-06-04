@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
-import { AgGridReact } from 'ag-grid-react';
-import './../css/ag-grid.css';
-import './../css/ag-theme-balham.css';
+const $ = require('jquery');
+$.DataTable = require('datatables.net');
 
 class Table extends Component {
   constructor(props) {
@@ -14,40 +13,60 @@ class Table extends Component {
     this.getData = this.getData.bind(this);
   }
   
-  componentWillMount() {
-    this.getData();
-  }
-  
-  getData() {
-    fetch('/tabledata')
+  getData(callback) {
+    fetch('/headers')
       .then((res) => {
         return res.json();
       }).then((data) => {
         const columns = Object.keys(data[0]).map((key, id)=>{
+          var formattedKey = key.replace('.', '\\.');
           return {
-            headerName: key,
-            field: key
+            title: key,
+            width: 100,
+            data: formattedKey
           }
         });
         this.setState({
           columns: columns,
-          data: data
         });
-        console.log(columns);
+      callback();
       });
   }
   
-  render() {     
+  componentDidMount() {
+    this.getData(this.mountTable.bind(this));
+  }
+  
+  mountTable() {
+    $(this.refs.main).DataTable({
+      dom: '<"data-table-wrapper"fltip>',
+      columns: this.state.columns,
+      ordering: false,
+      serverSide: true,
+      processing: true,
+      paging: true,
+      lengthMenu: [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+      pageLength: 100,
+      ajax: {
+        url: '/tabledata',
+        type: 'POST'
+      }
+    });
+  }
+  componentWillUnmount(){
+     $('.data-table-wrapper')
+     .find('table')
+     .DataTable()
+     .destroy(true);
+  }
+  shouldComponentUpdate() {
+      return false;
+  }
+
+  render() {
     return (
-      <div className="ag-theme-balham">
-        <AgGridReact
-          columnDefs={this.state.columns}
-          rowData={this.state.data}
-          enableSorting={true}
-          enableFilter={true}
-          pagination={true}
-          suppressFieldDotNotation={true}
-        />
+      <div>
+          <table ref="main" />
       </div>
     )
   }

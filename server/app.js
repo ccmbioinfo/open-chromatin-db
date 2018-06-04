@@ -8,19 +8,23 @@ var tmp = require('tmp');
 const app = express();
 const port = process.env.PORT || 3001;
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true,
+  parameterLimit: 2000
+})); 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 // Open connection to MySQL database
 var connection = mysql.createConnection({
     user: 'node-user',
-    host: 'mysql',
+//    host: 'mysql',
     password: 'password',
     database: 'bed'
 });
 
 connection.connect((err) => {
   if (err) throw err;
-  console.log('Connected!');
+  console.log('SQL DB connected!');
 });
 
 // POST query request from client
@@ -70,9 +74,33 @@ app.post('/search', (req, res) => {
   });
 });
 
+//// GET request for table data from server
+//app.get('/tabledata', (req, res) => {
+//  var sql = "SELECT * FROM bed LIMIT 5000"
+//  connection.query(sql, (err,rows) => {
+//    if(err) throw err;
+//    res.send(rows);
+//  });
+//});
+
+app.post('/tabledata', (req, res) => {
+  var start = req.body.start | 0;
+  var length = req.body.length | 0;
+  var sql = "SELECT * FROM bed LIMIT ? OFFSET ?"
+  connection.query(sql, [length, start], (err,rows) => {
+    if(err) throw err;
+    res.send({
+      draw: req.body.draw,
+      recordsTotal: 1449102,
+      recordsFiltered: 1449102,
+      data: rows
+    });
+  });
+});
+
 // GET request for table data from server
-app.get('/tabledata', (req, res) => {
-  var sql = "SELECT * FROM bed LIMIT 5000"
+app.get('/headers', (req, res) => {
+  var sql = "SELECT * FROM bed LIMIT 1"
   connection.query(sql, (err,rows) => {
     if(err) throw err;
     res.send(rows);
