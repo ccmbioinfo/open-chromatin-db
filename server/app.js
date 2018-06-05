@@ -1,14 +1,13 @@
 var mysql = require('mysql');
 var express = require('express');
-var bodyParser = require('body-parser');
 var fs = require('fs');
 var tmp = require('tmp');
 
 // Open Express connection on port 3001
 const app = express();
 const port = process.env.PORT || 3001;
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
+app.use(express.json());
+app.use(express.urlencoded({
   extended: true,
   parameterLimit: 2000
 })); 
@@ -17,7 +16,7 @@ app.listen(port, () => console.log(`Listening on port ${port}`));
 // Open connection to MySQL database
 var connection = mysql.createConnection({
     user: 'node-user',
-    host: 'mysql',
+//    host: 'mysql',
     password: 'password',
     database: 'bed'
 });
