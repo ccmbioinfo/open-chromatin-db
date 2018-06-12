@@ -4,6 +4,10 @@ import './../css/datatables.min.css';
 
 const $ = require('jquery');
 $.DataTable = require('datatables.net');
+require('jszip');
+require('datatables.net-buttons');
+require('datatables.net-buttons/js/buttons.html5.js');
+require('datatables.net-buttons/js/buttons.flash.js');
 
 class Table extends Component {
   constructor(props) {
@@ -41,7 +45,7 @@ class Table extends Component {
   
   mountTable() {
     $(this.refs.main).DataTable({
-      dom: '<"data-table-wrapper"fltip>',
+      dom: '<"data-table-wrapper"Brfltip>',
       columns: this.state.columns,
       ordering: false,
       serverSide: true,
@@ -53,15 +57,25 @@ class Table extends Component {
       ajax: {
         url: '/tabledata',
         type: 'POST'
-      }
+      }, 
+      buttons: [
+        'copy', {
+          extend: 'csv',
+          fieldBoundary: null,
+          fieldSeparator: '\t',
+          extension: '.bed'
+        }
+       ]
     });
   }
+  
   componentWillUnmount(){
      $('.data-table-wrapper')
      .find('table')
      .DataTable()
      .destroy(true);
   }
+  
   shouldComponentUpdate() {
       return false;
   }
