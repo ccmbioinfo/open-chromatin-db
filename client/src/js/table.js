@@ -4,7 +4,6 @@ import './../css/datatables.min.css';
 
 const $ = require('jquery');
 $.DataTable = require('datatables.net');
-require('jszip');
 require('datatables.net-buttons');
 require('datatables.net-buttons/js/buttons.html5.js');
 require('datatables.net-buttons/js/buttons.flash.js');
