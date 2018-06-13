@@ -11,17 +11,22 @@ db = MySQLdb.connect(user="root",
 cursor = db.cursor()
 
 # Name of table to be created
-table_name = "bed"
-directory = "/home/samfeng/bed/Intensity/"
+table_name = "bedtest"
+directory = "/home/samfeng/bed/Intensity"
 
 # Create table
-cursor.execute("CREATE TABLE `{0}` (id int not null)".format(table_name))
+cursor.execute("CREATE TABLE `{0}` (id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id))".format(table_name))
 
 # Create an array storing the list of BED files
 bed_array = []
 for x in os.listdir(directory):
   if x.endswith('.bed'):
     bed_array.append(directory + x)
+
+# Perform a natural sort on BED files (assuming they are differentiated by chromosome number)
+convert = lambda text: int(text) if text.isdigit() else text.lower() 
+alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ] 
+bed_array = sorted(bed_array, key = alphanum_key)
 
 # Determine the data headers and add to MySQL database
 with open(bed_array[0]) as f:
@@ -32,8 +37,6 @@ cursor.execute("ALTER TABLE {0} ADD `{1}` VARCHAR(5), ADD `{2}` INT, ADD `{3}` I
 
 for x in header[3:]:
   cursor.execute("ALTER TABLE {0} ADD `{1}` DECIMAL(4,3)".format(table_name, x) ) 
-
-cursor.execute("ALTER TABLE {0} DROP COLUMN id".format(table_name))
 
 header_string = "`{0}`".format("`, `".join(header))
 

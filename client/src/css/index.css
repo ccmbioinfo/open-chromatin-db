@@ -1,7 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: 'Helvetica', sans-serif;
 }
 
 .application {
@@ -88,4 +88,14 @@ input {
   font-size: small;
   font-style: italic;
   margin-top: 0.5em;
+}
+
+.dt-buttons {
+  padding-left: 1em;
+}
+
+.tab-content .dataTables_wrapper .dataTables_processing {
+  top: 4em;
+  z-index: 1000;
+  height: 100%;
 }
