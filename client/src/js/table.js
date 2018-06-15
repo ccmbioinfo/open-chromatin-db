@@ -51,7 +51,7 @@ class Table extends Component {
       searching: false,
       processing: true,
       paging: true,
-      lengthMenu: [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+      lengthMenu: [ [10, 25, 50, 100, 1000], [10, 25, 50, 100, 1000] ],
       pageLength: 100,
       ajax: {
         url: '/tabledata',
@@ -64,7 +64,10 @@ class Table extends Component {
           fieldSeparator: '\t',
           extension: '.bed'
         }
-       ]
+       ],
+      language: {
+          processing: '<span class="sr-only">Loading...</span>'
+      }
     });
   }
   

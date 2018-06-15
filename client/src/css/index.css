@@ -1,7 +1,13 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: 'Helvetica', sans-serif;
+}
+
+h1 {
+  position: relative;
+  top: 50%;
+  transform: translateY(-100%);
 }
 
 .application {
@@ -13,7 +19,17 @@ body {
   color: white;
   font-size: large;
   height: 13vh;
-  padding: 1em;
+}
+
+.fixed {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.nav {
+  padding-top: 13vh;
 }
 
 .nav ul {
@@ -62,6 +78,7 @@ input {
 
 .tab-content {
   height: 70vh;
+  padding-top: 22vh;
 }
 
 .ag-theme-balham {
@@ -88,4 +105,14 @@ input {
   font-size: small;
   font-style: italic;
   margin-top: 0.5em;
+}
+
+.dt-buttons {
+  padding-left: 1em;
+}
+
+.tab-content .dataTables_wrapper .dataTables_processing {
+  top: 4em;
+  z-index: 1000;
+  height: 100%;
 }
