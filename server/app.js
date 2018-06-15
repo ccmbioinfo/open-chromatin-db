@@ -68,8 +68,8 @@ app.post('/search', (req, res) => {
       if(err) throw err;
       console.log(rows);
       fs.createReadStream(`/var/lib/mysql-files/${location}`).pipe(fs.createWriteStream(`/home/samfeng/open-chromatin-db/client/public/files/${location}`));
+      res.send({url: location});
     });
-    res.send({url: location});
     cleanupCallBack();
   });
 });
@@ -91,7 +91,7 @@ app.post('/tabledata', (req, res) => {
 
 // GET request for table data from server
 app.get('/headers', (req, res) => {
-  var sql = "SELECT * FROM bed LIMIT 1"
+  var sql = "SELECT * FROM headers LIMIT 1"
   connection.query(sql, (err,rows) => {
     if(err) throw err;
     res.send(rows);

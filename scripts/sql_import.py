@@ -11,7 +11,7 @@ db = MySQLdb.connect(user="root",
 cursor = db.cursor()
 
 # Name of table to be created
-table_name = "bedtest"
+table_name = "bed"
 directory = "/home/samfeng/bed/Intensity"
 
 # Create table
