@@ -2,6 +2,7 @@ var mysql = require('mysql');
 var express = require('express');
 var fs = require('fs');
 var tmp = require('tmp');
+var async = require('async');
 
 // Open Express connection on port 3001
 const app = express();
@@ -75,18 +76,31 @@ app.post('/search', (req, res) => {
 });
 
 app.post('/tabledata', (req, res) => {
-  var start = req.body.start - 1 | 0;
+  var start = req.body.start | 0;
   var length = req.body.length | 0;
-  var sql = "SELECT * FROM bedidx WHERE id > ? LIMIT ?"
-  connection.query(sql, [start, length], (err,rows) => {
+  
+  params = [req.body.chr, req.body.chr, req.body.beginning, req.body.beginning, req.body.end, req.body.end, length, start];
+  for (var i=0; i<params.length; i++) {
+    if (params[i].length==0) params[i]=null;
+  }
+  console.log(params);
+
+  var countSql = "SELECT COUNT(*) AS total FROM bedidx WHERE (? IS NULL OR `DHS.Chr` = ?) AND (? IS NULL OR CAST(`DHS.Start` AS SIGNED)>=?) AND (? IS NULL OR CAST(`DHS.End` AS SIGNED)<=?)"
+  var dataSql = "SELECT * FROM bedidx WHERE (? IS NULL OR `DHS.Chr` = ?) AND (? IS NULL OR CAST(`DHS.Start` AS SIGNED)>=?) AND (? IS NULL OR CAST(`DHS.End` AS SIGNED)<=?) LIMIT ? OFFSET ?"
+  connection.query(countSql, params, (err,countRows) => { 
     if(err) throw err;
-    res.send({
-      draw: req.body.draw,
-      recordsTotal: 1449102,
-      recordsFiltered: 1449102,
-      data: rows
+    
+    connection.query(dataSql, params, (err,dataRows) => {
+      if(err) throw err;
+      res.send({
+        draw: req.body.draw,
+        recordsTotal: 1449102,
+        recordsFiltered: countRows[0].total,
+        data: dataRows
+      });
     });
   });
+  
 });
 
 // GET request for table data from server
