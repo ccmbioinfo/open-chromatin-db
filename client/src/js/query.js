@@ -1,4 +1,11 @@
 import React, { Component } from 'react';
+import './../css/datatables.min.css';
+
+const $ = require('jquery');
+$.DataTable = require('datatables.net');
+require('datatables.net-buttons');
+require('datatables.net-buttons/js/buttons.html5.js');
+require('datatables.net-buttons/js/buttons.flash.js');
 
 class Query extends Component {
   constructor(props) {
@@ -6,11 +13,80 @@ class Query extends Component {
     this.state = {
       'input': '',
       'chr': '',
-      'start': '', 
-      'end': ''
+      'beginning': '', 
+      'end': '',
+      'columns': [],
+      'data': []
     };
+    this.getData = this.getData.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+  }
+  
+  getData(callback) {
+    fetch('/headers')
+      .then((res) => {
+        return res.json();
+      }).then((data) => {
+        const columns = Object.keys(data[0]).map((key, id)=>{
+          var formattedKey = key.replace('.', '\\.');
+          return {
+            title: key,
+            width: 100,
+            data: formattedKey
+          }
+        });
+        this.setState({
+          columns: columns,
+        });
+      callback();
+      });
+  }
+  
+  mountTable() {
+    $(this.refs.main).DataTable({
+      dom: '<"data-table-wrapper"Brfltip>',
+      columns: this.state.columns,
+      ordering: false,
+      serverSide: true,
+      searching: false,
+      processing: true,
+      paging: true,
+      destroy: true,
+      lengthMenu: [ [10, 25, 50, 100, 1000], [10, 25, 50, 100, 1000] ],
+      pageLength: 100,
+      ajax: {
+        url: '/tabledata',
+        type: 'POST', 
+        data: {
+          'chr': this.state.chr,
+          'beginning': this.state.beginning,
+          'end': this.state.end
+        }
+      }, 
+      buttons: [
+        'copy', {
+          extend: 'csv',
+          fieldBoundary: null,
+          fieldSeparator: '\t',
+          extension: '.bed'
+        }
+       ],
+      language: {
+          processing: '<span class="sr-only">Loading...</span>'
+      }
+    });
+  }
+  
+  componentWillUnmount() {
+    $('.data-table-wrapper')
+     .find('table')
+     .DataTable()
+     .destroy(true);
+  }
+  
+  shouldComponentUpdate() {
+      return false;
   }
   
   handleInputChange(e) {
@@ -19,16 +95,19 @@ class Query extends Component {
   
   handleSubmit(e) {
     e.preventDefault();
+    this.setState({
+      'visible': false
+    });
     var input = this.state.input.toLowerCase();
-    var chr = ''; var start = ''; var end = '';
+    var chr = ''; var beginning = ''; var end = '';
     if (input.includes(":")) {
       var position = input.substring(input.indexOf(":"));
       chr = input.substring(0, input.indexOf(":"));
       if (input.includes("-")) {
-        start = position.substring(1, position.indexOf("-"));
+        beginning = position.substring(1, position.indexOf("-"));
         end = position.substring(position.indexOf("-")+1);
       } else {
-        start = position.substring(1);
+        beginning = position.substring(1);
         end = position.substring(1);
       }
     } else {
@@ -36,57 +115,35 @@ class Query extends Component {
     }
     this.setState({
       'chr': chr,
-      'start': start,
+      'beginning': beginning,
       'end': end
     }, function() {
-      fetch('/search', {
-        headers: new Headers({
-          'Content-Type': 'application/json'
-        }), 
-        method: 'POST', 
-        body: JSON.stringify({
-          'chr': this.state.chr,
-          'start': this.state.start,
-          'end': this.state.end
-        })
-      }).catch(error => {
-        throw(error);
-      }).then((res) => {
-        console.log(res);
-        return res.json();
-      }).then((data) => {
-        console.log(data);
-          this.setState({
-            'downloadUrl': data.url
-          });
-        });
+      if (document.querySelector('.data-table-wrapper')) {
+        $('.data-table-wrapper')
+         .find('table')
+         .DataTable()
+         .clear();
+      }
+      this.getData(this.mountTable.bind(this));
     });
   }
   
   render() {  
     return (
       <div className="query">
-        <form onSubmit={this.handleSubmit}>
+        <form>
           <label>
             Region of Interest:
             <input type="text" onChange={this.handleInputChange} />
             <p className="help">Please format input as following: {"\n"} Chromosome:StartPos-EndPos</p>
           </label>
-          <input className="btn" type="submit" />
+          <button className="btn" type="button" onClick={this.handleSubmit}>Submit</button>
         </form>
-        <div className="query-download">
-          <DownloadButton url={this.state.downloadUrl}/>
+        <div>
+          <table ref="main" className="display" />
         </div>
       </div>
     );
-  }
-}
-
-class DownloadButton extends Component {
-  render() {
-    return (
-      <a className="btn" href={window.location.origin + "/files/" + this.props.url} download="Query-result.bed">Download</a>
-    )
   }
 }
 
