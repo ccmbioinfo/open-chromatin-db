@@ -128,7 +128,7 @@ class Query extends Component {
     });
   }
   
-  render() {  
+  render() { 
     return (
       <div className="query">
         <form>

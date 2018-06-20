@@ -1,31 +1,40 @@
 import React, { Component } from 'react';
-import Query from './query';
-import Tracks from './tracks';
-import Home from './home';
-import { BrowserRouter, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Route, NavLink } from 'react-router-dom';
+import DHS from './dhs';
+import DHSGene from './dhs-gene';
 
 class Application extends Component { 
   render() {
     return(
       <BrowserRouter>
-        <div className="application">
-          <div className="application-header fixed">
-              <h1>Open Chromatin Database</h1>
-          </div>
-          <div className="nav fixed">
+          <div className="application">
+            <div className="application-header">
+                <h1>Open Chromatin Database</h1>
+            </div>
+          <div className="nav main-nav">
             <ul>
-              <li><Link to="/">Home</Link></li>
-              <li><Link to="/query">Query</Link></li>
-              <li><Link to="/tracks">Tracks</Link></li>
+              <li><NavLink exact to="/" activeClassName="active">Home</NavLink></li>
+              <li><NavLink to="/dhs" activeClassName="active">DHS</NavLink></li>
+              <li><NavLink to="/dhs-gene">DHSGene</NavLink></li>
             </ul>
           </div>
           <div className="tab-content">
-            <Route path="/" exact={true} component={Home} />
-            <Route path="/query" component={Query} />
-            <Route path="/tracks" component={Tracks} />
+            <Route exact path="/" component={Home} />
+            <Route path="/dhs" component={DHS} />
+            <Route path="/dhs-gene" component={DHSGene} />
           </div>
-        </div>
+          </div>
       </BrowserRouter>
+    );
+  }
+}
+
+class Home extends Component { 
+  render() {
+    return (
+      <div>
+        <h2>Welcome!</h2>
+      </div>
     );
   }
 }
