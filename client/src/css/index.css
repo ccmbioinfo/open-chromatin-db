@@ -137,3 +137,26 @@ input {
   z-index: 1000;
   height: 100%;
 }
+
+.grid-container a {
+  display: block;
+  padding: 0.35em;
+  color: #fff;
+}
+
+.grid-container {
+  display: inline-grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.grid-item:nth-child(-n+1) {
+  grid-column: 1 / 5;
+}
+
+.grid-item:nth-child(8n), .grid-item:nth-child(8n-2), .grid-item:nth-child(8n-5), .grid-item:nth-child(8n-7)  {
+  background: #f29f97;
+}
+
+.grid-item:nth-child(8n-1), .grid-item:nth-child(8n-3), .grid-item:nth-child(8n-4), .grid-item:nth-child(8n-6) {
+  background: #698aac;
+}
