@@ -17,7 +17,7 @@ for item in tracks:
       item["trackType"] = "CanvasFeatures"
     if "style" in item:
       item["style"]["height"] = "function(feature){ if (feature.get('score')==0) {return 0;} else {return 15;} }"
-      item["style"]["color"] = "function(feature) { var index=feature.get('color'); var color; if (index==0) color='#3300CC'; else if (index==1) color='#00FF99'; if (index==2) color='#9900FF'; if (index==3) color='#FFCC00'; else if (index==4) color='#FF0000'; if (index==5) color='#990033'; if (index==6) color='#FF9933'; else if (index==7) color='#00CCFF'; else if (index==8) color='#00FF33'; else if (index==9) color='#FF6699'; return color; }"
+      item["style"]["color"] = "function(feature) { var index=feature.get('color'); var color; if (index==0) color='#8dd3c7'; else if (index==1) color='#bebada'; if (index==2) color='#fccde5'; if (index==3) color='#fb8072'; else if (index==4) color='#80b1d3'; if (index==5) color='#fdb462'; if (index==6) color='#b3de69'; else if (index==7) color='#8dd3c7'; else if (index==8) color='#fccde5'; else if (index==9) color='#bc80bd'; return color; }"
     item["displayMode"] = "compact"
 
 with open(file, 'w') as f:
