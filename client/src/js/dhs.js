@@ -26,11 +26,29 @@ class DHS extends Component {
 
 class DHSInfo extends Component { 
   render() {
+    var list = [];
+    for (var i=1;i<23;i++) {
+      list.push(<ChrLink val={i} />);
+    }
     return (
       <div>
         <h2>Welcome!</h2>
-        <p>Here's a link to the entire dataset: <a href={"files/All-tracks-sorted.bed"} download="All-Tracks.bed">All Tracks</a></p>
+        <p>Here are links to download the dataset:</p>
+        <div className="grid-container">
+          <a className="grid-item" href={"files/bed/All-tracks-sorted.bed"} download="All-Tracks.bed">All Tracks</a>
+          {list}
+        </div>
       </div>
+    );
+  }
+}
+
+class ChrLink extends Component {
+  render() {
+    return (
+      <a className="grid-item" href={"files/bed/chr" + this.props.val + ".bed"} download={"chr" + this.props.val + ".bed"} >
+        Chromosome {this.props.val}
+      </a>
     );
   }
 }
