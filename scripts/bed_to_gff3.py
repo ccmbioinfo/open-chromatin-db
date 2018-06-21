@@ -5,7 +5,7 @@ import pandas as pd
 import subprocess
 
 # Filename refers to the BED file that needs to be converted
-filename = '/home/samfeng/open-chromatin-db/files/All-Tracks.bed'
+filename = '/home/samfeng/open-chromatin-db/files/All-tracks-sorted.bed'
 
 # Path to directory of project in question
 project_root = '/home/samfeng/open-chromatin-db/'
@@ -35,6 +35,8 @@ with open(filename) as f:
   # Constant values for required GFF fields
   df['period'] = '.'
   df['type'] = 'sequence_feature'
+  df['index'] = df.index
+  df['attribute'] = 'color=' + (df['index'] % 10).astype(str)
   
   # Round all numbers to 3 decimal palces
   df.round(3)
@@ -47,7 +49,7 @@ with open(filename) as f:
     gff_filename = key + '.gff'
     gff_path = project_root + 'files/gff/' + gff_filename
     file = open(gff_path, 'w')
-    columns = [constant_keys[0], 'period', 'type', constant_keys[1], constant_keys[2], value, 'period', 'period', 'period']
+    columns = [constant_keys[0], 'period', 'type', constant_keys[1], constant_keys[2], value, 'period', 'period', 'attribute']
     df.to_csv(gff_path, sep='\t', header=None, index=None, columns=columns, float_format='%.3f')
     file.close()
     value = value.replace('/', '-')
