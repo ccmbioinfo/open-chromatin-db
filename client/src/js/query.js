@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import FileSaver from 'file-saver';
 import './../css/datatables.min.css';
 
 const $ = require('jquery');
@@ -11,16 +12,17 @@ class Query extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      'input': '',
-      'chr': '',
-      'beginning': '', 
-      'end': '',
-      'columns': [],
-      'data': []
+      input: '',
+      chr: '',
+      beginning: '', 
+      end: '',
+      columns: [],
+      data: [],
     };
     this.getData = this.getData.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.mountTable = this.mountTable.bind(this);
   }
   
   getData(callback) {
@@ -54,7 +56,7 @@ class Query extends Component {
       paging: true,
       destroy: true,
       lengthMenu: [ [10, 25, 50, 100, 1000], [10, 25, 50, 100, 1000] ],
-      pageLength: 100,
+      pageLength: 25,
       ajax: {
         url: '/tabledata',
         type: 'POST', 
@@ -67,9 +69,30 @@ class Query extends Component {
       buttons: [
         'copy', {
           extend: 'csv',
+          text: 'Download This Page',
           fieldBoundary: null,
           fieldSeparator: '\t',
           extension: '.bed'
+        }, {
+          text: 'Download All', 
+          action: function () {
+            fetch('/full-file', {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                'chr': this.state.chr,
+                'beginning': this.state.beginning,
+                'end': this.state.end
+              })
+            }).then(function(response) {
+              return response.blob();
+            }).then(function(blob) {
+              FileSaver.saveAs(blob, 'DHS.bed');
+            });
+          }.bind(this)
         }
        ],
       language: {
@@ -95,9 +118,6 @@ class Query extends Component {
   
   handleSubmit(e) {
     e.preventDefault();
-    this.setState({
-      'visible': false
-    });
     var input = this.state.input.toLowerCase();
     var chr = ''; var beginning = ''; var end = '';
     if (input.includes(":")) {
@@ -139,6 +159,7 @@ class Query extends Component {
           </label>
           <button className="btn" type="button" onClick={this.handleSubmit}>Submit</button>
         </form>
+        
         <div>
           <table ref="main" className="display" />
         </div>
