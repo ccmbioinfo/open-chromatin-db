@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import FileSaver from 'file-saver';
 import './../css/datatables.min.css';
 
 const $ = require('jquery');
@@ -67,9 +68,30 @@ class Query extends Component {
       buttons: [
         'copy', {
           extend: 'csv',
+          text: 'Download This Page',
           fieldBoundary: null,
           fieldSeparator: '\t',
           extension: '.bed'
+        }, {
+          text: 'Download All', 
+          action: function () {
+            fetch('/full-file', {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                'chr': this.state.chr,
+                'beginning': this.state.beginning,
+                'end': this.state.end
+              })
+            }).then(function(response) {
+              return response.blob();
+            }).then(function(blob) {
+              FileSaver.saveAs(blob, 'DHS.bed');
+            });
+          }.bind(this)
         }
        ],
       language: {
