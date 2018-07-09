@@ -143,21 +143,21 @@ class QueryGene extends Component {
          .find('table')
          .DataTable()
          .clear();
-      }   
-      this.getData(this.mountTable.bind(this));      
+      }  
+      this.getData(this.mountTable.bind(this));
     });
   }
   
   render() { 
     return (
       <div className="query">
-        <form>
+        <form onSubmit={this.handleSubmit}>
           <label>
             Region of Interest:
             <input type="text" onChange={this.handleInputChange} />
             <p className="help">Please format input as following: {"\n"} Chromosome:StartPos-EndPos</p>
           </label>
-          <button className="btn" type="button" onClick={this.handleSubmit}>Submit</button>
+          <button className="btn" type="submit">Submit</button>
         </form>
         
         <div>

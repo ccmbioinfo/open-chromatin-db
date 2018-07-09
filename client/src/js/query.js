@@ -151,13 +151,13 @@ class Query extends Component {
   render() { 
     return (
       <div className="query">
-        <form>
+        <form onSubmit={this.handleSubmit}>
           <label>
             Region of Interest:
             <input type="text" onChange={this.handleInputChange} />
             <p className="help">Please format input as following: {"\n"} Chromosome:StartPos-EndPos</p>
           </label>
-          <button className="btn" type="button" onClick={this.handleSubmit}>Submit</button>
+          <button className="btn" type="submit">Submit</button>
         </form>
         
         <div>
