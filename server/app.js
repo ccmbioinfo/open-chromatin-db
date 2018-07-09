@@ -1,10 +1,8 @@
 var mysql = require('mysql');
 var express = require('express');
 var fs = require('fs');
-var tmp = require('tmp');
-var async = require('async');
-
-const { exec } = require('child_process');
+var child_process = require('child_process');
+const uuidv4 = require('uuid/v4');
 
 // Open Express connection on port 3001
 const app = express();
@@ -57,40 +55,34 @@ app.post('/tabledata', (req, res) => {
       });
     });
   });
-  
 });
 
-// POST request to download full queried dataset from server
+// POST request to download full queried DHS dataset from server
 app.post('/full-file', (req, res) => {
-  tmp.file({prefix: 'query-', postfix: '.bed'}, function _tempFileCreated(err, path, fd, cleanupCallBack) {
-    if (err) throw err;
-    
-    var location = path.slice(path.indexOf('query-'));
-    
-    var params = [];
-    var sql = `SELECT * FROM headers UNION SELECT ` + columns + ` INTO OUTFILE '/var/lib/mysql-files/${location}' FROM bedidx`;
-    
-    params = [req.body.chr, req.body.chr, req.body.beginning, req.body.beginning, req.body.end, req.body.end];
-    for (var i=0; i<params.length; i++) {
-      if (params[i].length==0) params[i]=null;
-    }
-    console.log(params);
-    
-    sql = sql + " WHERE (? IS NULL OR `DHS.Chr` = ?) AND (? IS NULL OR CAST(`DHS.Start` AS SIGNED)>=?) AND (? IS NULL OR CAST(`DHS.End` AS SIGNED)<=?)"
+  var location = '/var/lib/mysql-files/' + uuidv4() + '.bed';
 
-    connection.query(sql, params, (err,rows) => {
-      if(err) throw err;
-      res.writeHead(200, {
-        'Content-Type': 'application/octet-stream',
-        'Content-disposition': 'attachment; filename=DHS.bed'
-      });
-      fs.createReadStream(`/var/lib/mysql-files/${location}`).pipe(res);
+  var params = [];
+  var sql = `SELECT * FROM headers UNION SELECT ` + columns + ` INTO OUTFILE '${location}' FROM bedidx`;
+
+  params = [req.body.chr, req.body.chr, req.body.beginning, req.body.beginning, req.body.end, req.body.end];
+  for (var i=0; i<params.length; i++) {
+    if (params[i].length==0) params[i]=null;
+  }
+  console.log(params);
+
+  sql = sql + " WHERE (? IS NULL OR `DHS.Chr` = ?) AND (? IS NULL OR CAST(`DHS.Start` AS SIGNED)>=?) AND (? IS NULL OR CAST(`DHS.End` AS SIGNED)<=?)"
+
+  connection.query(sql, params, (err,rows) => {
+    if(err) throw err;
+    res.writeHead(200, {
+      'Content-Type': 'application/octet-stream',
+      'Content-disposition': 'attachment; filename=DHS.bed'
     });
-    cleanupCallBack();
+    fs.createReadStream(location).pipe(res);
   });
 });
 
-// GET request for table data from server
+// GET request for headers for DHS data from server
 app.get('/headers', (req, res) => {
   var sql = "SELECT * FROM headers LIMIT 1"
   connection.query(sql, (err,rows) => {
@@ -98,6 +90,54 @@ app.get('/headers', (req, res) => {
     res.send(rows);
   });
 });
+
+// POST request to populate DataTables displaying DHS data
+app.post('/tabledata-gene', (req, res) => {
+  var start = req.body.start | 0;
+  var length = req.body.length | 0;
+  
+  var params = [req.body.chr, req.body.chr, req.body.beginning, req.body.beginning, req.body.end, req.body.end, length, start];
+  for (var i=0; i<params.length; i++) {
+    if (params[i].length==0) params[i]=null;
+  }
+  console.log(params);
+
+  var countSql = "SELECT COUNT(*) AS total FROM bedidx WHERE (? IS NULL OR `DHS.Chr` = ?) AND (? IS NULL OR CAST(`DHS.Start` AS SIGNED)>=?) AND (? IS NULL OR CAST(`DHS.End` AS SIGNED)<=?)"
+  var dataSql = "SELECT * FROM bedidx WHERE (? IS NULL OR `DHS.Chr` = ?) AND (? IS NULL OR CAST(`DHS.Start` AS SIGNED)>=?) AND (? IS NULL OR CAST(`DHS.End` AS SIGNED)<=?) LIMIT ? OFFSET ?"
+  connection.query(countSql, params, (err,countRows) => { 
+    if(err) throw err;
+    connection.query(dataSql, params, (err,dataRows) => {
+      if(err) throw err;
+      res.send({
+        draw: req.body.draw,
+        recordsTotal: 1449102,
+        recordsFiltered: countRows[0].total,
+        data: dataRows
+      });
+    });
+  });
+});
+
+// POST request to download full queried DHS-Gene dataset from server
+app.post('/full-file-gene', (req, res) => {  
+  var file = `/home/vnelakuditi/parsed_data_download/DHS-Gene-all_${req.body.chr}.sorted.tab.gz`;
+  var query = `${req.body.chr}:${req.body.beginning}-${req.body.end}`;
+  console.log(file, query);
+  var results = child_process.spawn('tabix', [file, query, '-h']);
+  
+  var tmpFile = '/tmp/' + uuidv4() + '.bed';
+  console.log(tmpFile);
+  var writeStream = fs.createWriteStream(tmpFile);
+
+  results.stdout.pipe(writeStream);
+
+  writeStream.on('finish', () => {
+    fs.createReadStream(tmpFile).pipe(res); 
+    fs.unlink(tmpFile,(err) => {
+      if (err) console.log("Failed to delete temp file");
+    });
+  });
+}); 
 
 // If required in the future, closes connection to MySQL database
 //connection.end((err) => {
