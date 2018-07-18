@@ -27,15 +27,15 @@ class DHS extends Component {
 class DHSInfo extends Component { 
   render() {
     var list = [];
-    for (var i=1;i<23;i++) {
-      list.push(<ChrLink val={i} />);
+    for (var i = 1; i < 23 ; i++) {
+      list.push(<ChrLink key={i} val={i} />);
     }
     return (
       <div>
         <h2>Welcome!</h2>
         <p>Here are links to download the dataset:</p>
         <div className="grid-container">
-          <a className="grid-item" href={"files/bed/All-tracks-sorted.bed"} download="All-Tracks.bed">All Tracks</a>
+          <a className="grid-item" href={"/files/bed/All-tracks-sorted.bed"} download="All-Tracks.bed">All Tracks</a>
           {list}
         </div>
       </div>
@@ -46,7 +46,7 @@ class DHSInfo extends Component {
 class ChrLink extends Component {
   render() {
     return (
-      <a className="grid-item" href={"files/bed/chr" + this.props.val + ".bed"} download={"chr" + this.props.val + ".bed"} >
+      <a className="grid-item" href={"/files/bed/chr" + this.props.val + ".bed"} download={"chr" + this.props.val + ".bed"} >
         Chromosome {this.props.val}
       </a>
     );
