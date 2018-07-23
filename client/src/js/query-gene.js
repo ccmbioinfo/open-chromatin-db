@@ -18,6 +18,8 @@ class QueryGene extends Component {
       end: '',
       columns: [],
       data: [],
+      fileName: '',
+      loading: 'invisible'
     };
     this.getData = this.getData.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -26,16 +28,24 @@ class QueryGene extends Component {
   }
   
   getData(callback) {
-    fetch('/headers')
-      .then((res) => {
+    fetch('/headers-gene', {
+      method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fileName: this.state.fileName
+        })
+      }).then((res) => {
         return res.json();
       }).then((data) => {
-        const columns = Object.keys(data[0]).map((key, id)=>{
-          var formattedKey = key.replace('.', '\\.');
+        console.log(data);
+        const columns = Object.keys(data).map((key) => {
           return {
-            title: key,
+            title: data[key],
             width: 100,
-            data: formattedKey
+            data: key
           }
         });
         this.setState({
@@ -55,15 +65,12 @@ class QueryGene extends Component {
       processing: true,
       paging: true,
       destroy: true,
-      lengthMenu: [ [10, 25, 50, 100, 1000], [10, 25, 50, 100, 1000] ],
-      pageLength: 25,
+      pageLength: 10,
       ajax: {
-        url: '/tabledata',
+        url: '/tabledata-gene',
         type: 'POST', 
         data: {
-          'chr': this.state.chr,
-          'beginning': this.state.beginning,
-          'end': this.state.end
+          'file': this.state.fileName
         }
       }, 
       buttons: [
@@ -76,6 +83,7 @@ class QueryGene extends Component {
         }, {
           text: 'Download All', 
           action: function () {
+            console.log(this.state);
             fetch('/full-file-gene', {
               method: 'POST',
               headers: {
@@ -83,9 +91,7 @@ class QueryGene extends Component {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
-                'chr': this.state.chr,
-                'beginning': this.state.beginning,
-                'end': this.state.end
+                fileName: this.state.fileName
               })
             }).then(function(response) {
               return response.blob();
@@ -94,9 +100,9 @@ class QueryGene extends Component {
             });
           }.bind(this)
         }
-       ],
+      ],
       language: {
-          processing: '<span class="sr-only">Loading...</span>'
+        processing: '<span class="sr-only">Loading...</span>'
       }
     });
   }
@@ -106,10 +112,6 @@ class QueryGene extends Component {
      .find('table')
      .DataTable()
      .destroy(true);
-  }
-  
-  shouldComponentUpdate() {
-      return false;
   }
   
   handleInputChange(e) {
@@ -134,23 +136,47 @@ class QueryGene extends Component {
       chr = input;
     }
     this.setState({
-      'chr': chr,
-      'beginning': beginning,
-      'end': end
+      chr: chr,
+      beginning: beginning,
+      end: end,
+      loading: 'visible'
     }, function() {
+      console.log(this.state)
       if (document.querySelector('.data-table-wrapper')) {
         $('.data-table-wrapper')
          .find('table')
          .DataTable()
          .clear();
       }  
-      this.getData(this.mountTable.bind(this));
+      fetch('/gene', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chr: this.state.chr,
+          beginning: this.state.beginning,
+          end: this.state.end
+        })
+      }).then((res) => {
+        return res.json();
+      }).then((data) => { 
+        this.setState({
+          fileName: data.fileName,
+          loading: 'invisible'
+        });
+        this.getData(this.mountTable.bind(this));
+      });
     });
   }
   
   render() { 
     return (
       <div className="query">
+        <div className={this.state.loading + " loading"}>
+          <h2>Loading...</h2>
+        </div>
         <form onSubmit={this.handleSubmit}>
           <label>
             Region of Interest:

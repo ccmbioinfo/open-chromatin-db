@@ -61,9 +61,9 @@ class Query extends Component {
         url: '/tabledata',
         type: 'POST', 
         data: {
-          'chr': this.state.chr,
-          'beginning': this.state.beginning,
-          'end': this.state.end
+          chr: this.state.chr,
+          beginning: this.state.beginning,
+          end: this.state.end
         }
       }, 
       buttons: [
@@ -83,9 +83,9 @@ class Query extends Component {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
-                'chr': this.state.chr,
-                'beginning': this.state.beginning,
-                'end': this.state.end
+                chr: this.state.chr,
+                beginning: this.state.beginning,
+                end: this.state.end
               })
             }).then(function(response) {
               return response.blob();
@@ -94,9 +94,9 @@ class Query extends Component {
             });
           }.bind(this)
         }
-       ],
+      ],
       language: {
-          processing: '<span class="sr-only">Loading...</span>'
+        processing: '<span class="sr-only">Loading...</span>'
       }
     });
   }
@@ -109,7 +109,7 @@ class Query extends Component {
   }
   
   shouldComponentUpdate() {
-      return false;
+    return false;
   }
   
   handleInputChange(e) {
