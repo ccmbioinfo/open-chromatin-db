@@ -1,10 +1,10 @@
 var mysql = require('mysql');
 var express = require('express');
 var fs = require('fs');
-var tmp = require('tmp');
-var async = require('async');
-
-const { exec } = require('child_process');
+var child_process = require('child_process');
+const uuidv4 = require('uuid/v4');
+const csv = require('csvtojson');
+var es = require('event-stream');
 
 // Open Express connection on port 3001
 const app = express();
@@ -12,14 +12,15 @@ const port = process.env.PORT || 3001;
 app.use(express.json());
 app.use(express.urlencoded({
   extended: true,
-  parameterLimit: 2000
+  limit: '5mb', 
+  parameterLimit: 10000 // Limits increased due to DataTables
 })); 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 // Open connection to MySQL database
 var connection = mysql.createConnection({
     user: 'node-user',
-//    host: 'mysql',
+//    host: 'mysql', // Required line if working with Docker
     password: 'password',
     database: 'bed'
 });
@@ -57,45 +58,116 @@ app.post('/tabledata', (req, res) => {
       });
     });
   });
-  
 });
 
-// POST request to download full queried dataset from server
+// POST request to download full queried DHS dataset from server
 app.post('/full-file', (req, res) => {
-  tmp.file({prefix: 'query-', postfix: '.bed'}, function _tempFileCreated(err, path, fd, cleanupCallBack) {
-    if (err) throw err;
-    
-    var location = path.slice(path.indexOf('query-'));
-    
-    var params = [];
-    var sql = `SELECT * FROM headers UNION SELECT ` + columns + ` INTO OUTFILE '/var/lib/mysql-files/${location}' FROM bedidx`;
-    
-    params = [req.body.chr, req.body.chr, req.body.beginning, req.body.beginning, req.body.end, req.body.end];
-    for (var i=0; i<params.length; i++) {
-      if (params[i].length==0) params[i]=null;
-    }
-    console.log(params);
-    
-    sql = sql + " WHERE (? IS NULL OR `DHS.Chr` = ?) AND (? IS NULL OR CAST(`DHS.Start` AS SIGNED)>=?) AND (? IS NULL OR CAST(`DHS.End` AS SIGNED)<=?)"
+  var location = '/var/lib/mysql-files/' + uuidv4() + '.bed';
 
-    connection.query(sql, params, (err,rows) => {
-      if(err) throw err;
-      res.writeHead(200, {
-        'Content-Type': 'application/octet-stream',
-        'Content-disposition': 'attachment; filename=DHS.bed'
-      });
-      fs.createReadStream(`/var/lib/mysql-files/${location}`).pipe(res);
+  var params = [];
+  var sql = `SELECT * FROM headers UNION SELECT ${columns} INTO OUTFILE '${location}' FROM bedidx`;
+
+  params = [req.body.chr, req.body.chr, req.body.beginning, req.body.beginning, req.body.end, req.body.end];
+  for (var i=0; i<params.length; i++) {
+    if (params[i].length==0) params[i]=null;
+  }
+  console.log(params);
+
+  sql = sql + " WHERE (? IS NULL OR `DHS.Chr` = ?) AND (? IS NULL OR CAST(`DHS.Start` AS SIGNED)>=?) AND (? IS NULL OR CAST(`DHS.End` AS SIGNED)<=?)"
+
+  connection.query(sql, params, (err,rows) => {
+    if(err) throw err;
+    res.writeHead(200, {
+      'Content-Type': 'application/octet-stream',
+      'Content-disposition': 'attachment; filename=DHS.bed'
     });
-    cleanupCallBack();
+    fs.createReadStream(location).pipe(res);
   });
 });
 
-// GET request for table data from server
+// GET request for headers for DHS data from server
 app.get('/headers', (req, res) => {
   var sql = "SELECT * FROM headers LIMIT 1"
   connection.query(sql, (err,rows) => {
     if(err) throw err;
     res.send(rows);
+  });
+});
+
+// GET request for DHS-Gene data from server
+app.post('/gene', (req, res) => {
+  var file = `/home/vnelakuditi/parsed_data_download/DHS-Gene-all_${req.body.chr}.sorted.tab.gz`;
+  var query = `${req.body.chr}:${req.body.beginning}-${req.body.end}`;
+  console.log(file, query);
+  var results = child_process.spawn('tabix', [file, query, '-h']);
+  
+  var tmpFile = '/tmp/' + uuidv4() + '.bed';
+  var writeStream = fs.createWriteStream(tmpFile);
+
+  results.stdout.pipe(writeStream);
+
+  writeStream.on('finish', () => {
+    res.send({
+      fileName: tmpFile
+    });
+  });
+});
+
+// POST request to populate DataTables displaying DHS-gene data
+app.post('/tabledata-gene', (req, res) => {
+  var start = (req.body.start | 0) + 2;
+  var quit = (req.body.length | 0) + start;
+  var end = quit - 1;
+  var file = req.body.file;
+  
+  var recordsTotal = '';
+  var lengthCommand = `wc -l < ${file}`
+  var length = child_process.spawn('sh', ['-c', lengthCommand]);
+  length.stdout.on('data', function(data) {
+    recordsTotal += data.toString('utf8') - 1;
+    
+    var output = [];
+    var dataCommand = `sed -n '${start},${end}p;${quit}q' ${file}`
+    var data = child_process.spawn('sh', ['-c', dataCommand]);
+    
+    data.stdout
+      .pipe(es.split())
+      .pipe(es.mapSync((line) => {
+        if (line) {
+          var split = line.split('\t');
+          output.push(split);
+        }
+      }));
+
+    data.on('close', function() {
+      res.send({
+        draw: req.body.draw,
+        recordsTotal: recordsTotal,
+        recordsFiltered: recordsTotal,
+        data: output
+      });
+    });
+  });
+});
+
+// POST request to download full queried DHS-Gene dataset from server
+app.post('/full-file-gene', (req, res) => {  
+  var tmpFile = req.body.fileName;
+  console.log(tmpFile);
+  fs.createReadStream(tmpFile).pipe(res); 
+//  fs.unlink(tmpFile,(err) => {
+//    if (err) console.log("Failed to delete temp file");
+//  });
+}); 
+
+// GET request for headers for DHS-Gene data from server
+app.post('/headers-gene', (req, res) => {
+  var tmpFile = req.body.fileName;
+  csv({delimiter: '\t'})
+  .fromFile(tmpFile)
+  .on('header', (header) => {
+    console.log(header);
+    res.send(header);
   });
 });
 

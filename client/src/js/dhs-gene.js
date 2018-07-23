@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Route, NavLink } from 'react-router-dom';
-import Query from './query';
+import QueryGene from './query-gene';
 import Tracks from './tracks';
 
 class DHSGene extends Component {
@@ -16,7 +16,7 @@ class DHSGene extends Component {
         </div>
         <div className='tab-content'>
           <Route exact path={this.props.match.path} component={DHSGeneInfo} />
-          <Route path="/dhs-gene/query" component={Query} />
+          <Route path="/dhs-gene/query" component={QueryGene} />
           <Route path="/dhs-gene/tracks" component={Tracks} />
         </div>
       </div>
