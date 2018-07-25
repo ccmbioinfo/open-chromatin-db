@@ -44,8 +44,8 @@ app.post('/tabledata', (req, res) => {
   }
   console.log(params);
 
-  var countSql = "SELECT COUNT(*) AS total FROM bedidx WHERE (? IS NULL OR `DHS.Chr` = ?) AND (? IS NULL OR CAST(`DHS.Start` AS SIGNED)>=?) AND (? IS NULL OR CAST(`DHS.End` AS SIGNED)<=?)"
-  var dataSql = "SELECT * FROM bedidx WHERE (? IS NULL OR `DHS.Chr` = ?) AND (? IS NULL OR CAST(`DHS.Start` AS SIGNED)>=?) AND (? IS NULL OR CAST(`DHS.End` AS SIGNED)<=?) LIMIT ? OFFSET ?"
+  var countSql = "SELECT COUNT(*) AS total FROM bedidx WHERE (? IS NULL OR `DHS.Chr` = ?) AND (? IS NULL OR CAST(`DHS.End` AS SIGNED)>=?) AND (? IS NULL OR CAST(`DHS.Start` AS SIGNED)<=?)"
+  var dataSql = "SELECT * FROM bedidx WHERE (? IS NULL OR `DHS.Chr` = ?) AND (? IS NULL OR CAST(`DHS.End` AS SIGNED)>=?) AND (? IS NULL OR CAST(`DHS.Start` AS SIGNED)<=?) LIMIT ? OFFSET ?"
   connection.query(countSql, params, (err,countRows) => { 
     if(err) throw err;
     connection.query(dataSql, params, (err,dataRows) => {
