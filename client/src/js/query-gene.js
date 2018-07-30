@@ -40,7 +40,6 @@ class QueryGene extends Component {
       }).then((res) => {
         return res.json();
       }).then((data) => {
-        console.log(data);
         const columns = Object.keys(data).map((key) => {
           return {
             title: data[key],
@@ -83,7 +82,6 @@ class QueryGene extends Component {
         }, {
           text: 'Download All', 
           action: function () {
-            console.log(this.state);
             fetch('/full-file-gene', {
               method: 'POST',
               headers: {
@@ -141,7 +139,6 @@ class QueryGene extends Component {
       end: end,
       loading: 'visible'
     }, function() {
-      console.log(this.state)
       if (document.querySelector('.data-table-wrapper')) {
         $('.data-table-wrapper')
          .find('table')
