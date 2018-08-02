@@ -38,6 +38,7 @@ class DHSInfo extends Component {
           <a className="grid-item" href={"/files/bed/All-tracks-sorted.bed"} download="All-Tracks.bed">All Tracks</a>
           {list}
         </div>
+        <p><a href={"/files/DHS-Metadata.xlsx"} download="DHS-Metadata.xlsx">Here</a> you can download the DHS metadata, a description of the data samples.</p>
       </div>
     );
   }
