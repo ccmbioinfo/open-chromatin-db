@@ -18,7 +18,7 @@ app.listen(port, () => console.log(`Listening on port ${port}`));
 
 // GET request for DHS-Gene data from server
 app.post('/dhs', (req, res) => {
-  var file = `/home/samfeng/DHS-Sorted/Intensity-${req.body.chr}-sorted.bed.gz`;
+  var file = `../data/DHS-Sorted/Intensity-${req.body.chr}-sorted.bed.gz`;
   var query = `${req.body.chr}:${req.body.beginning}-${req.body.end}`;
   console.log(file, query);
   var results = child_process.spawn('tabix', [file, query, '-h']);
@@ -91,7 +91,7 @@ app.post('/headers', (req, res) => {
 
 // GET request for DHS-Gene data from server
 app.post('/gene', (req, res) => {
-  var file = `/home/vnelakuditi/parsed_data_download/DHS-Gene-all_${req.body.chr}.sorted.tab.gz`;
+  var file = `../data/parsed_data_download/DHS-Gene-all_${req.body.chr}.sorted.tab.gz`;
   var query = `${req.body.chr}:${req.body.beginning}-${req.body.end}`;
   console.log(file, query);
   var results = child_process.spawn('tabix', [file, query, '-h']);

@@ -1,5 +1,6 @@
-FROM node:8.11.2-alpine
-RUN mkdir -p /usr/src/app
+FROM node:carbon
+RUN apt-get update && apt-get install -y tabix
+RUN bash -c 'mkdir -p /usr/src/{app,data}'
 WORKDIR /usr/src/app
 COPY package.json /usr/src/app
 RUN npm install

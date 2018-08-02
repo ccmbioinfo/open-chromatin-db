@@ -1,25 +1,12 @@
 version: '3'
 
 services:
-  mysql:
-    image: mysql:5.7.22
-    volumes: 
-      - /home/samfeng/open-chromatin-db/data:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=bed
-      - MYSQL_USER=node-user
-      - MYSQL_PASSWORD=password
-    ports:
-      - "3307:3306"
-    networks:
-      - open-cd
   node:
     build: server
     ports:
       - "3001:3001"
-    depends_on:
-      - mysql
+    volumes: 
+      - /home/samfeng/open-chromatin-db/data:/usr/src/data
     networks:
       - open-cd
   react:
