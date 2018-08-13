@@ -6,7 +6,6 @@
     "csvtojson": "^2.0.6",
     "event-stream": "^3.3.4",
     "express": "^4.16.3",
-    "mysql": "^2.15.0",
     "nodemon": "^1.17.5",
     "uuid": "^3.3.2"
   },

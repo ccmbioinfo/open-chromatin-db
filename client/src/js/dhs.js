@@ -35,7 +35,7 @@ class DHSInfo extends Component {
         <h2>Welcome!</h2>
         <p>Here are links to download the dataset:</p>
         <div className="grid-container">
-          <a className="grid-item" href={"/files/bed/All-tracks-sorted.bed"} download="All-Tracks.bed">All Tracks</a>
+          <a className="grid-item" href={"/files/All-tracks-sorted.bed"} download="All-Tracks.bed">All Tracks</a>
           {list}
         </div>
         <p><a href={"/files/DHS-Metadata.xlsx"} download="DHS-Metadata.xlsx">Here</a> you can download the DHS metadata, a description of the data samples.</p>
@@ -47,7 +47,7 @@ class DHSInfo extends Component {
 class ChrLink extends Component {
   render() {
     return (
-      <a className="grid-item" href={"/files/bed/chr" + this.props.val + ".bed"} download={"chr" + this.props.val + ".bed"} >
+      <a className="grid-item" href={"/files/bed/" + this.props.val + ".bed"} download={"chr" + this.props.val + ".bed"} >
         Chromosome {this.props.val}
       </a>
     );

@@ -1,4 +1,8 @@
 #!/usr/bin/python
+import warnings
+warnings.filterwarnings("ignore", message="numpy.dtype size changed")
+warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
+
 import csv
 import re
 import pandas as pd
@@ -36,7 +40,7 @@ with open(filename) as f:
   df['period'] = '.'
   df['type'] = 'sequence_feature'
   df['index'] = df.index
-  df['attribute'] = 'color=' + (df['index'] % 10).astype(str)
+  df['attribute'] = 'color=' + (df['index'] % 8).astype(str)
   
   # Round all numbers to 3 decimal palces
   df.round(3)
