@@ -153,11 +153,11 @@ input {
   grid-column: 1 / 5;
 }
 
-.grid-item:nth-child(8n), .grid-item:nth-child(8n-2), .grid-item:nth-child(8n-5), .grid-item:nth-child(8n-7)  {
+.grid-item:nth-child(8n), .grid-item:nth-child(8n-2), .grid-item:nth-child(8n-3), .grid-item:nth-child(8n-5)  {
   background: #f29f97;
 }
 
-.grid-item:nth-child(8n-1), .grid-item:nth-child(8n-3), .grid-item:nth-child(8n-4), .grid-item:nth-child(8n-6) {
+.grid-item:nth-child(8n-1), .grid-item:nth-child(8n-4), .grid-item:nth-child(8n-6), .grid-item:nth-child(8n-7) {
   background: #698aac;
 }
 

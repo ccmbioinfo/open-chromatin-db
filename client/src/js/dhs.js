@@ -11,7 +11,7 @@ class DHS extends Component {
           <ul>
             <li><NavLink exact to="/dhs/">Info</NavLink></li>
             <li><NavLink to="/dhs/query">Query</NavLink></li>
-            <li><NavLink to="/dhs/tracks">Tracks</NavLink></li>
+            <li><NavLink to="/dhs/tracks">Tracks </NavLink></li>
           </ul>
         </div>
         <div className='tab-content'>
@@ -47,7 +47,7 @@ class DHSInfo extends Component {
 class ChrLink extends Component {
   render() {
     return (
-      <a className="grid-item" href={"/files/bed/" + this.props.val + ".bed"} download={"chr" + this.props.val + ".bed"} >
+      <a className="grid-item" href={"/files/chr" + this.props.val + ".bed"} download={"chr" + this.props.val + ".bed"} >
         Chromosome {this.props.val}
       </a>
     );
