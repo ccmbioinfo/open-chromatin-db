@@ -16,8 +16,8 @@ app.use(express.urlencoded({
 })); 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
-// GET request for DHS-Gene data from server
-app.post('/dhs', (req, res) => {
+// GET request for DHS data from server
+app.post('/api/dhs', (req, res) => {
   var file = `../data/DHS-Sorted/Intensity-${req.body.chr}-sorted.bed.gz`;
   var query = `${req.body.chr}:${req.body.beginning}-${req.body.end}`;
   console.log(file, query);
@@ -36,7 +36,7 @@ app.post('/dhs', (req, res) => {
 });
 
 // POST request to populate DataTables displaying DHS data
-app.post('/tabledata', (req, res) => {
+app.post('/api/tabledata', (req, res) => {
   var start = (req.body.start | 0) + 2;
   var quit = (req.body.length | 0) + start;
   var end = quit - 1;
@@ -60,7 +60,7 @@ app.post('/tabledata', (req, res) => {
           output.push(split);
         }
       }));
-
+    
     data.on('close', function() {
       res.send({
         draw: req.body.draw,
@@ -73,14 +73,13 @@ app.post('/tabledata', (req, res) => {
 });
 
 // POST request to download full queried DHS dataset from server
-app.post('/full-file', (req, res) => {
+app.post('/api/full-file', (req, res) => {
   var tmpFile = req.body.fileName;
-  console.log(tmpFile);
   fs.createReadStream(tmpFile).pipe(res); 
 });
 
 // POST request for headers for DHS data from server
-app.post('/headers', (req, res) => {
+app.post('/api/headers', (req, res) => {
   var tmpFile = req.body.fileName;
   csv({delimiter: '\t'})
     .fromFile(tmpFile)
@@ -90,7 +89,7 @@ app.post('/headers', (req, res) => {
 });
 
 // GET request for DHS-Gene data from server
-app.post('/gene', (req, res) => {
+app.post('/api/gene', (req, res) => {
   var file = `../data/parsed_data_download/DHS-Gene-all_${req.body.chr}.sorted.tab.gz`;
   var query = `${req.body.chr}:${req.body.beginning}-${req.body.end}`;
   console.log(file, query);
@@ -109,7 +108,7 @@ app.post('/gene', (req, res) => {
 });
 
 // POST request to populate DataTables displaying DHS-gene data
-app.post('/tabledata-gene', (req, res) => {
+app.post('/api/tabledata-gene', (req, res) => {
   var start = (req.body.start | 0) + 2;
   var quit = (req.body.length | 0) + start;
   var end = quit - 1;
@@ -146,14 +145,13 @@ app.post('/tabledata-gene', (req, res) => {
 });
 
 // POST request to download full queried DHS-Gene dataset from server
-app.post('/full-file-gene', (req, res) => {  
+app.post('/api/full-file-gene', (req, res) => {  
   var tmpFile = req.body.fileName;
-  console.log(tmpFile);
   fs.createReadStream(tmpFile).pipe(res); 
 }); 
 
 // POST request for headers for DHS-Gene data from server
-app.post('/headers-gene', (req, res) => {
+app.post('/api/headers-gene', (req, res) => {
   var tmpFile = req.body.fileName;
   csv({delimiter: '\t'})
     .fromFile(tmpFile)

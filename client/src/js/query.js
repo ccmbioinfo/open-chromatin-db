@@ -28,7 +28,7 @@ class Query extends Component {
   }
   
   getData(callback) {
-    fetch('/headers', {
+    fetch('/api/headers', {
       method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -66,7 +66,7 @@ class Query extends Component {
       destroy: true,
       pageLength: 10,
       ajax: {
-        url: '/tabledata',
+        url: '/api/tabledata',
         type: 'POST', 
         data: {
           'file': this.state.fileName
@@ -82,8 +82,7 @@ class Query extends Component {
         }, {
           text: 'Download All', 
           action: function () {
-            console.log(this.state);
-            fetch('/full-file', {
+            fetch('/api/full-file', {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
@@ -140,14 +139,13 @@ class Query extends Component {
       end: end,
       loading: 'visible'
     }, function() {
-      console.log(this.state)
       if (document.querySelector('.data-table-wrapper')) {
         $('.data-table-wrapper')
          .find('table')
          .DataTable()
          .clear();
       }  
-      fetch('/dhs', {
+      fetch('/api/dhs', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -184,7 +182,6 @@ class Query extends Component {
           </label>
           <button className="btn" type="submit">Submit</button>
         </form>
-        
         <div>
           <table ref="main" className="display" />
         </div>

@@ -28,7 +28,7 @@ class QueryGene extends Component {
   }
   
   getData(callback) {
-    fetch('/headers-gene', {
+    fetch('/api/headers-gene', {
       method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -66,7 +66,7 @@ class QueryGene extends Component {
       destroy: true,
       pageLength: 10,
       ajax: {
-        url: '/tabledata-gene',
+        url: '/api/tabledata-gene',
         type: 'POST', 
         data: {
           'file': this.state.fileName
@@ -82,7 +82,7 @@ class QueryGene extends Component {
         }, {
           text: 'Download All', 
           action: function () {
-            fetch('/full-file-gene', {
+            fetch('/api/full-file-gene', {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
@@ -145,7 +145,7 @@ class QueryGene extends Component {
          .DataTable()
          .clear();
       }  
-      fetch('/gene', {
+      fetch('/api/gene', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
