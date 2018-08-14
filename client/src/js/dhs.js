@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, NavLink } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import Query from './query';
 import Tracks from './tracks';
 
@@ -7,13 +7,6 @@ class DHS extends Component {
   render() {
     return (
       <div>
-        <div className='nav sub-nav'>
-          <ul>
-            <li><NavLink exact to="/dhs/">Info</NavLink></li>
-            <li><NavLink to="/dhs/query">Query</NavLink></li>
-            <li><NavLink to="/dhs/tracks">Tracks </NavLink></li>
-          </ul>
-        </div>
         <div className='tab-content'>
           <Route exact path={this.props.match.path} component={DHSInfo} />
           <Route path="/dhs/query" component={Query} />
@@ -33,12 +26,14 @@ class DHSInfo extends Component {
     return (
       <div>
         <h2>Welcome!</h2>
-        <p>Here are links to download the dataset:</p>
-        <div className="grid-container">
-          <a className="grid-item" href={"/files/All-tracks-sorted.bed"} download="All-Tracks.bed">All Tracks</a>
-          {list}
+        <div className="page-content">
+          <p>Here the relevant links to the dataset: </p>
+          <div className="grid-container">
+            <a className="grid-item" href={"/files/All-tracks-sorted.bed"} download="All-Tracks.bed">All Tracks</a>
+            {list}
+            <a className="grid-item" href={"/files/DHS-Metadata.xlsx"} download="DHS-Metadata.xlsx">Metadata</a>
+          </div>
         </div>
-        <p><a href={"/files/DHS-Metadata.xlsx"} download="DHS-Metadata.xlsx">Here</a> you can download the DHS metadata, a description of the data samples.</p>
       </div>
     );
   }
@@ -48,7 +43,7 @@ class ChrLink extends Component {
   render() {
     return (
       <a className="grid-item" href={"/files/chr" + this.props.val + ".bed"} download={"chr" + this.props.val + ".bed"} >
-        Chromosome {this.props.val}
+        Chr {this.props.val}
       </a>
     );
   }

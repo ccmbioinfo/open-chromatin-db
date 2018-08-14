@@ -171,6 +171,7 @@ class Query extends Component {
   render() { 
     return (
       <div className="query">
+        <h2>Query</h2>
         <div className={this.state.loading + " loading"}>
           <h2>Loading...</h2>
         </div>
