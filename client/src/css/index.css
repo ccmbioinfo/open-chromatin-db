@@ -2,10 +2,6 @@ input, textarea, select, button, body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
-.application {
-  text-align: center;
-}
-
 .application-header {
   background-color: #222;
   color: white;
@@ -40,6 +36,12 @@ input {
   margin: 0.2em 1em;
 }
 
+img {
+  width: 40%;
+  float: right;
+  margin: 0.2em 1em;
+}
+
 .alert {
   font-size: small;
   font-style: bold;
@@ -48,11 +50,11 @@ input {
 }
 
 .tab-content {
-  padding: 0.5em;
+  padding: 1em;
 }
 
 .page-content {
-  padding: 2em;
+  padding: 1em;
 }
 
 .ag-theme-balham {
