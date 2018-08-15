@@ -59,7 +59,7 @@ class Home extends Component {
             <p>Please cite the following two papers when using <strong>iDOCRaSE</strong> database:</p>
             <ul>
               <li>Parisa Shooshtari, Samantha Feng, Justin Foong, Michael Brudno, Chris Cotsapas, iDOCRaSE: Database of Open Chromatin Regions from SEquencing data.</li>
-              <li>Parisa Shooshtari, Hailiang Huang, Chris Cotsapas, “Integrative Genetic and Epigenetic Analysis Uncovers Regulatory Mechanisms of Autoimmune Disease”, Am J Hum Genet. 2017 Jul 6;101(1):75-86.</li>
+              <li>Parisa Shooshtari, Hailiang Huang, Chris Cotsapas, Integrative Genetic and Epigenetic Analysis Uncovers Regulatory Mechanisms of Autoimmune Disease, Am J Hum Genet. 2017 Jul 6;101(1):75-86.</li>
             </ul>
           </div>
         </div>
