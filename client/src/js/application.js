@@ -56,7 +56,11 @@ class Home extends Component {
             <p>We have made the <a href="/dhs/download">metadata</a>, entire <a href="/dhs/download">curated DHS dataset</a> and <a href="/dhs/download">data specific to each chromosome</a> downloadable at this website. Through our web interface, the user can also <a href="/dhs/query">query the database</a> by specifying a region of interest (i.e. entering a specific chromosome number and start and end coordinates). After submitting coordinates of a region of interest, an exportable table of the results matching the user input is generated.<br />Additionally, the user can <a href="/dhs/tracks">visualize the replicable DHS data</a> through JBrowse, an embeddable genome browser, by specifying coordinates of the region and cell types of interest. Information specific to each replicable DHS (e.g. intensity of the DHS for any given cell-type and genomic coordinates of the DHS) can be found in the pop-up window that opens after clicking on a given DHS. Replicable DHS are only visible if they are accessible (i.e. having non-zero intensities) at the cell types of interest. The replicable DHS that are accessible in multiple cell types get the same color on different tracks (each corresponding to a cell type) of the genome browser, to make adjacent DHS more trackable visually across several cell types.</p>
 
             <strong>Citations:</strong>
-            <p>Please cite the following two papers when using <strong>iDOCRaSE</strong> database.</p>
+            <p>Please cite the following two papers when using <strong>iDOCRaSE</strong> database:</p>
+            <ul>
+              <li>Parisa Shooshtari, Samantha Feng, Justin Foong, Michael Brudno, Chris Cotsapas, iDOCRaSE: Database of Open Chromatin Regions from SEquencing data.</li>
+              <li>Parisa Shooshtari, Hailiang Huang, Chris Cotsapas, “Integrative Genetic and Epigenetic Analysis Uncovers Regulatory Mechanisms of Autoimmune Disease”, Am J Hum Genet. 2017 Jul 6;101(1):75-86.</li>
+            </ul>
           </div>
         </div>
       </div>
