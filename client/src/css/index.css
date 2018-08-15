@@ -24,15 +24,15 @@ iframe {
 
 form {
   padding: 1em 1em 0 1em;
-  display: flex;
+  display: inline-flex;
 }
 
 .one-third {
-  flex: 1;
+  flex: 1 1 auto;
 }
 
 .two-third {
-  flex: 2;
+  flex: 2 2 auto;
 }
 
 input {
@@ -40,13 +40,11 @@ input {
   margin: 0.2em 1em;
 }
 
-.input-error {
-  color: red;
+.alert {
   font-size: small;
   font-style: bold;
-  background-color: lightpink;
-  display: inline-block;
-  margin-bottom: 2rem;
+  display: table;
+  margin: 0 auto 2rem auto;
 }
 
 .tab-content {
