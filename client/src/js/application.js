@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import { Route, NavLink } from 'react-router-dom';
 import DHS from './dhs';
 
@@ -48,6 +49,22 @@ class NavDropdown extends Component {
     this.state = {
       isToggleOn: false
     };
+    this.handleClick = this.handleClick.bind(this);
+  }
+  
+  componentDidMount() {
+    document.addEventListener('mousedown', this.handleClick, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClick, false);
+  }
+  
+  
+  handleClick(e) {
+    if(!ReactDOM.findDOMNode(this).contains(e.target) && this.state.isToggleOn) {
+      this.showDropdown(e);
+    }
   }
   
   showDropdown(e) {

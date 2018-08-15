@@ -27,7 +27,7 @@ class DHSInfo extends Component {
       <div>
         <h2>Welcome!</h2>
         <div className="page-content">
-          <p>Here the relevant links to the dataset: </p>
+          <p>Here are the relevant links to the dataset: </p>
           <div className="grid-container">
             <a className="grid-item" href={"/files/All-tracks-sorted.bed"} download="All-Tracks.bed">All Tracks</a>
             {list}

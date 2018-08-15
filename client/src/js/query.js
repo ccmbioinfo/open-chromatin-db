@@ -16,6 +16,8 @@ class Query extends Component {
       chr: '',
       beginning: '', 
       end: '',
+      inputError: '',
+      inputValid: true,
       columns: [],
       data: [],
       fileName: '',
@@ -23,8 +25,10 @@ class Query extends Component {
     };
     this.getData = this.getData.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.makeQuery = this.makeQuery.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.mountTable = this.mountTable.bind(this);
+    this.isValidInput = this.isValidInput.bind(this);
   }
   
   getData(callback) {
@@ -78,6 +82,7 @@ class Query extends Component {
           text: 'Download This Page',
           fieldBoundary: null,
           fieldSeparator: '\t',
+          title: 'DHS-page',
           extension: '.bed'
         }, {
           text: 'Download All', 
@@ -116,8 +121,28 @@ class Query extends Component {
     this.setState({input: e.target.value});
   }
   
+  isValidInput() {
+    if (!this.state.input.match(/^chr([1-9]|[1][0-9]|2[012]):\d+-\d+/) && !this.state.input.match(/^chr([1-9]|[1][0-9]|2[012])$/)) {
+      this.setState({
+        inputValid: false,
+        inputError: 'Please format your query properly. For example, a valid entry would be "chr3:12350-123555".'
+      });
+    } else {
+      this.setState({
+        inputValid: true,
+        inputError: ''
+      });
+    }
+  }
+  
   handleSubmit(e) {
     e.preventDefault();
+    if (this.state.inputValid) {
+      this.makeQuery();
+    }
+  }
+  
+  makeQuery() {
     var input = this.state.input.toLowerCase();
     var chr = ''; var beginning = ''; var end = '';
     if (input.includes(":")) {
@@ -176,13 +201,16 @@ class Query extends Component {
           <h2>Loading...</h2>
         </div>
         <form onSubmit={this.handleSubmit}>
-          <label>
+          <label className="two-third">
             Region of Interest:
-            <input type="text" onChange={this.handleInputChange} />
-            <p className="help">Please format input as following: {"\n"} Chromosome:StartPos-EndPos</p>
+            <input type="text" onChange={this.handleInputChange} onBlur={this.isValidInput}/>
+            <p className="help">Please format input as following: {"\n"} Chr:StartPos-EndPos</p>
           </label>
-          <button className="btn" type="submit">Submit</button>
+          <label className="one-third">
+            <button className="btn" type="submit">Submit</button>
+          </label>
         </form>
+        <p className={!this.state.inputValid ? "alert alert-danger" : ""}>{this.state.inputError}</p>
         <div>
           <table ref="main" className="display" />
         </div>

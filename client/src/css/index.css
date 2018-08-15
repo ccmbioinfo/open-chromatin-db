@@ -23,16 +23,30 @@ iframe {
 }
 
 form {
-  padding: 1em;
+  padding: 1em 1em 0 1em;
+  display: flex;
 }
 
-form label {
-  display: block;
+.one-third {
+  flex: 1;
+}
+
+.two-third {
+  flex: 2;
 }
 
 input {
   padding: 0em;
   margin: 0.2em 1em;
+}
+
+.input-error {
+  color: red;
+  font-size: small;
+  font-style: bold;
+  background-color: lightpink;
+  display: inline-block;
+  margin-bottom: 2rem;
 }
 
 .tab-content {
