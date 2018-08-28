@@ -1,34 +1,19 @@
 version: '3'
-
+  
 services:
-  node:
-    build: server
-    ports:
-      - "3001:3001"
-    volumes: 
-      - /home/samfeng/open-chromatin-db/data:/usr/src/data
-    networks:
-      - open-cd
-  react:
+  nginx:
     build: client
-    ports:
-      - "80:80"
-    depends_on: 
-      - node
-    networks:
-      - open-cd
-  jbrowse:
-    build: jbrowse
-    ports:
-      - "3002:3002"
+    ports: 
+        - "80:80"
     volumes:
-      - /home/samfeng/open-chromatin-db/jbrowse/data:/usr/src/app/data
-    networks: 
-      - open-cd
+        - /home/samfeng/open-chromatin-db/client/public/files:/usr/share/nginx/html/files
+        - /home/vnelakuditi/JBrowse_test:/var/www/jbrowse
+    networks:
+        - docker
 
 networks:
-  open-cd:
+  docker:
     ipam:
       driver: default
       config:
-        - subnet: 10.10.11.1/22
+        - subnet: 10.10.12.1/22 

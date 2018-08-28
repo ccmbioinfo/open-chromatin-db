@@ -11,6 +11,7 @@ class DHS extends Component {
         <Route path="/dhs/download" component={Download} />
         <Route path="/dhs/query" component={Query} />
         <Route path="/dhs/tracks" component={Tracks} />
+        <Route path="/dhs/jbrowse-query" component={Query} />
       </div>
     )
   }

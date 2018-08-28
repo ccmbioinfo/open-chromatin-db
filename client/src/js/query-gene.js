@@ -11,18 +11,20 @@ require('datatables.net-buttons/js/buttons.flash.js');
 require('datatables.net-fixedcolumns-dt');
 const queryString = require('query-string');
 
-class Query extends Component {
+class QueryGene extends Component {
   constructor(props) {
     super(props);
     this.state = {
       input: '',
       inputError: '',
-      inputValid: true,
+      queryType: 'dhs',
       jbrowse: false,
+      inputValid: true,
       columns: [],
       data: [],
       fileName: '',
-      loading: 'invisible'
+      loading: 'invisible', 
+      disabledInput: false
     };
     this.getData = this.getData.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -30,12 +32,21 @@ class Query extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.mountTable = this.mountTable.bind(this);
     this.isValidInput = this.isValidInput.bind(this);
+    this.handleQueryChange = this.handleQueryChange.bind(this);
   }
   
   componentWillMount() {
-    var parsed = queryString.parse(this.props.location.search);
-    if (parsed.search !== undefined) {
-      var searchValue = parsed.search;
+    var query = queryString.parse(this.props.location.search);
+    if (query.search !== undefined) {
+      var searchValue;
+      if (query.type === 'dhs') {
+        searchValue = 'chr' + query.search;
+      } else {
+        searchValue = query.search;
+        this.setState({
+          queryType: 'gene'
+        });
+      }
       this.setState({
         input: searchValue,
         disabledInput: true,
@@ -73,19 +84,20 @@ class Query extends Component {
   }
   
   mountTable() {
-    $(this.refs.main).DataTable({
+    $(this.refs.gene).DataTable({
       dom: '<"data-table-wrapper"Brfltip>',
       columns: this.state.columns,
       ordering: false,
       serverSide: true,
       searching: false,
       processing: true,
+      autoWidth: false,
       paging: true,
       destroy: true,
       pageLength: 10,
       scrollX: true,
       scrollCollapse: true,
-      fixedColumns:   {
+      fixedColumns: {
         leftColumns: 3
       },
       ajax: {
@@ -127,6 +139,9 @@ class Query extends Component {
         processing: '<span class="sr-only">Loading...</span>'
       }
     });
+    this.setState({
+      loading: 'invisible'
+    });
   }
   
   componentWillUnmount() {
@@ -141,10 +156,19 @@ class Query extends Component {
   }
   
   isValidInput() {
-    if (!this.state.input.match(/^chr([1-9]|[1][0-9]|2[012])(?:|:\d+-\d+)$/i) && this.state.input !== "") {
+    var regex, inputError;
+    if (this.state.queryType === 'dhs') {
+      regex = new RegExp(/^chr([1-9]|[1][0-9]|2[012]|X|Y)(?:|:\d+-\d+)$/i);
+      inputError = 'Please format your query properly. For example, a valid entry would be "chr3:12350-123555".';
+    } else {
+      regex = new RegExp(/^[\w.-]+$/i);
+      inputError = 'Please enter a valid gene name.'
+    }
+    
+    if (!this.state.input.match(regex) && this.state.input !== "") {
       this.setState({
         inputValid: false,
-        inputError: 'Please format your query properly. For example, a valid entry would be "chr3:12350-123555".'
+        inputError: inputError
       });
     } else {
       this.setState({
@@ -154,8 +178,17 @@ class Query extends Component {
     }
   }
   
+  handleQueryChange(e) {
+    this.setState({
+      queryType: e.target.value
+    }, function() {
+      this.isValidInput();
+    });
+  }
+  
   handleSubmit(e) {
     e.preventDefault();
+    this.isValidInput();
     if (this.state.inputValid && this.state.input !== "") {
       this.makeQuery();
     }
@@ -169,9 +202,10 @@ class Query extends Component {
         $('.data-table-wrapper')
          .find('table')
          .DataTable()
-         .clear();
+         .destroy();
+        $(this.refs.gene).empty();
       }  
-      fetch('/api/dhs', {
+      fetch(`/api/dhs-gene/${this.state.queryType}`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -185,8 +219,7 @@ class Query extends Component {
         return res.json();
       }).then((data) => { 
         this.setState({
-          fileName: data.fileName,
-          loading: 'invisible'
+          fileName: data.fileName
         });
         this.getData(this.mountTable.bind(this));
       });
@@ -204,8 +237,26 @@ class Query extends Component {
           <form onSubmit={this.handleSubmit}>
             <label className="two-third">
               Region of Interest:
-              <input type="text" onChange={this.handleInputChange} onBlur={this.isValidInput}/>
+              <input type="text" onChange={this.handleInputChange} onBlur={this.isValidInput} />
               <p className="help">Please format input as following: {"\n"} Chr:StartPos-EndPos</p>
+              <label>
+                <input
+                  type="radio"
+                  value="dhs"
+                  checked={this.state.queryType === "dhs"}
+                  onChange={this.handleQueryChange}
+                />
+                By DHS
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  value="gene"
+                  checked={this.state.queryType === "gene"}
+                  onChange={this.handleQueryChange}
+                />
+                By Gene
+              </label>
             </label>
             <label className="one-third">
               <button className="btn" type="submit">Submit</button>
@@ -214,11 +265,11 @@ class Query extends Component {
         </fieldset>
         <p className={!this.state.inputValid ? "alert alert-danger" : ""}>{this.state.inputError}</p>
         <div>
-          <table ref="main" className="display" />
+          <table ref="gene" className="display" />
         </div>
       </div>
     );
   }
 }
 
-export default Query;
+export default QueryGene;

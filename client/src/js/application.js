@@ -2,33 +2,60 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Route, NavLink } from 'react-router-dom';
 import DHS from './dhs';
+import DHSGene from './dhs-gene';
 
 class Application extends Component { 
   render() {
-    return( 
+    return ( 
       <div className="text-center">
-        <nav className="navbar navbar-expand navbar-dark bg-dark">
-          <a className="navbar-brand" href="/">iDOCRaSE</a>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav mr-auto">
-              <li className="nav-item">
-                <NavLink exact to="/" className="nav-link" activeClassName="active">Home</NavLink>
-              </li>
-              <NavDropdown name="DHS">
-                <NavLink exact to="/dhs/download" className="dropdown-item" activeClassName="active">Download</NavLink>
-                <div className="dropdown-divider"></div>
-                <NavLink to="/dhs/query" className="dropdown-item" activeClassName="active">Query</NavLink>
-                <div className="dropdown-divider"></div>
-                <NavLink to="/dhs/tracks" className="dropdown-item" activeClassName="active">Tracks</NavLink>
-              </NavDropdown>
-            </ul>
-          </div>
-        </nav>
+        <Route component={Header} />
         <div className="tab-content">
           <Route exact path="/" component={Home} />
           <Route path="/dhs" component={DHS} />
+          <Route path="/dhs-gene" component={DHSGene} />
         </div>
       </div>
+    );
+  }
+}
+
+class Header extends Component {
+  render() {
+    return (
+      <div>
+        {this.props.location.pathname.match(/jbrowse-query/) ? '' : <Nav />}
+      </div>
+    );
+  }
+}
+
+class Nav extends Component {
+  render() {
+    return (
+      <nav className="navbar navbar-expand navbar-dark bg-dark">
+        <a className="navbar-brand" href="/">iDOCRaSE</a>
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul className="navbar-nav mr-auto">
+            <li className="nav-item">
+              <NavLink exact to="/" className="nav-link" activeClassName="active">Home</NavLink>
+            </li>
+            <NavDropdown name="DHS" path="/dhs/">
+              <NavLink exact to="/dhs/download" className="dropdown-item" activeClassName="active">Download</NavLink>
+              <div className="dropdown-divider"></div>
+              <NavLink to="/dhs/query" className="dropdown-item" activeClassName="active">Query</NavLink>
+              <div className="dropdown-divider"></div>
+              <NavLink to="/dhs/tracks" className="dropdown-item" activeClassName="active">Tracks</NavLink>
+            </NavDropdown>
+            <NavDropdown name="DHS-Gene" path="/dhs-gene/">
+              <NavLink exact to="/dhs-gene/download" className="dropdown-item" activeClassName="active">Download</NavLink>
+              <div className="dropdown-divider"></div>
+              <NavLink to="/dhs-gene/query" className="dropdown-item" activeClassName="active">Query</NavLink>
+              <div className="dropdown-divider"></div>
+              <NavLink to="/dhs-gene/tracks" className="dropdown-item" activeClassName="active">Tracks</NavLink>
+            </NavDropdown>
+          </ul>
+        </div>
+      </nav>
     );
   }
 }
@@ -105,7 +132,7 @@ class NavDropdown extends Component {
       <li className="nav-item dropdown">
         <NavLink className="nav-link dropdown-toggle" href="/" id="navbarDropdown" role="button" 
           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-          onClick={(e) => {this.showDropdown(e)}} to="/dhs/">{this.props.name}</NavLink>
+          onClick={(e) => {this.showDropdown(e)}} to={this.props.path}>{this.props.name}</NavLink>
         <div className={classDropdownMenu} aria-labelledby="navbarDropdown" onClick={(e) => {this.showDropdown(e)}}>
           {this.props.children}
         </div>
