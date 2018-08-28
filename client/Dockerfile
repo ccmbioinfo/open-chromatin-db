@@ -8,6 +8,7 @@ RUN yarn build
 
 FROM nginx:1.14.0
 COPY --from=react-temp /usr/src/app/build /usr/share/nginx/html
+RUN mkdir -p /var/www/jbrowse
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

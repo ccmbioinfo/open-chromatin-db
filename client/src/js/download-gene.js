@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class Download extends Component { 
+class DownloadGene extends Component { 
   render() {
     var list = [];
     for (var i = 1; i < 23 ; i++) {
@@ -32,4 +32,4 @@ class ChrLink extends Component {
   }
 }
 
-export default Download;
+export default DownloadGene;

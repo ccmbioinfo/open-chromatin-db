@@ -132,3 +132,17 @@ img {
   width: 100%;
   height: 100%;
 }
+
+:disabled, .disabled {
+  cursor: not-allowed;
+}
+
+.data-table-wrapper table.dataTable {
+  width: 100%;
+  margin: 0;
+}
+
+.data-table-wrapper .DTFC_LeftHeadWrapper tr,
+.data-table-wrapper .DTFC_LeftBodyWrapper td {
+  background-color: #e0e0e0;
+}
