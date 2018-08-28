@@ -1,0 +1,195 @@
+"Cell Type",Category
+"heart left ventricle",cardiovascular
+"cardiac mesoderm",cardiovascular
+heart,cardiovascular
+"superior temporal gyrus","central nervous system"
+brain,"central nervous system"
+"spinal cord","central nervous system"
+"medulla oblongata","central nervous system"
+midbrain,"central nervous system"
+"astrocyte of the cerebellum","central nervous system"
+"middle frontal gyrus","central nervous system"
+"Ammon's horn","central nervous system"
+"inferior parietal cortex","central nervous system"
+"bipolar neuron","central nervous system"
+"neural stem progenitor cell","central nervous system"
+"occipital lobe","central nervous system"
+putamen,"central nervous system"
+pons,"central nervous system"
+"globus pallidus","central nervous system"
+"caudate nucleus","central nervous system"
+"brain pericyte","central nervous system"
+astrocyte,"central nervous system"
+hepatocyte,digestive
+"large intestine",digestive
+stomach,digestive
+"small intestine",digestive
+tongue,digestive
+spleen,digestive
+"thyroid gland",endocrine
+"adrenal gland",endocrine
+"dermis blood vessel endothelial cell",endothelial
+"dermis microvascular lymphatic vessel endothelial cell",endothelial
+"pulmonary artery endothelial cell",endothelial
+"brain microvascular endothelial cell",endothelial
+"glomerular endothelial cell",endothelial
+"mammary epithelial cell",epithelial
+"non-pigmented ciliary epithelial cell",epithelial
+"bronchial epithelial cell",epithelial
+"choroid plexus epithelial cell",epithelial
+"renal cortical epithelial cell",epithelial
+"glomerular visceral epithelial cell",epithelial
+"amniotic epithelial cell",epithelial
+"kidney epithelial cell",epithelial
+"retinal pigment epithelial cell",epithelial
+"epithelial cell of proximal tubule",epithelial
+"epithelial cell of prostate",epithelial
+placenta,"extra embryo"
+"trophoblast cell","extra embryo"
+"amniotic stem cell","extra embryo"
+"dedifferentiated amniotic fluid mesenchymal stem cell","extra embryo"
+"umbilical cord","extra embryo"
+retina,eye
+eye,eye
+"skin fibroblast",fibroblast
+"foreskin fibroblast",fibroblast
+"fibroblast of skin of abdomen",fibroblast
+"fibroblast of pedal digit skin",fibroblast
+"fibroblast of the conjunctiva",fibroblast
+"fibroblast of upper leg skin",fibroblast
+"fibroblast of gingiva",fibroblast
+"fibroblast of pulmonary artery",fibroblast
+"fibroblast of lung",fibroblast
+"fibroblast of the aortic adventitia",fibroblast
+"fibroblast of dermis",fibroblast
+"fibroblast of arm",fibroblast
+"fibroblast of mammary gland",fibroblast
+"fibroblast of peridontal ligament",fibroblast
+"common myeloid progenitor, CD34-positive",immune
+"CD4-positive helper T cell",immune
+"B cell",immune
+T-cell,immune
+thymus,immune
+"CD8-positive, alpha-beta T cell",immune
+"CD1c-positive myeloid dendritic cell",immune
+"T-helper 1 cell",immune
+"T-helper 2 cell",immune
+"CD14-positive monocyte",immune
+"natural killer cell",immune
+"regulatory T cell",immune
+"CD14-positive, CD16-negative classical monocyte",immune
+"CD34-negative, CD41-positive, CD42-positive megakaryocyte cell",immune
+erythroblast,immune
+macrophage,immune
+"macrophage - T=6days B-glucan",immune
+"macrophage - T=6days LPS",immune
+"macrophage - T=6days untreated",immune
+"monocyte - T=0days",immune
+"inflammatory macrophage",immune
+"alternatively activated macrophage",immune
+"CD4-positive, alpha-beta T cell",immune
+"lymphocyte of B lineage - CTR - ALL",immune
+"mononuclear cell of bone marrow - AML",immune
+"myeloid cell - AML",immune
+"peripheral blood mononuclear cell - AML",immune
+"left renal cortex interstitium",kidney
+"renal pelvis",kidney
+"right kidney",kidney
+kidney,kidney
+"renal cortex interstitium",kidney
+"left kidney",kidney
+"left renal pelvis",kidney
+"right renal pelvis",kidney
+"right renal cortex interstitium",kidney
+lung,lung
+"left lung",lung
+"right lung",lung
+"muscle of arm",muscle
+"muscle of leg",muscle
+"muscle of trunk",muscle
+"forelimb muscle",muscle
+"muscle of back",muscle
+"thoracic segment muscle",muscle
+"smooth muscle cell of the brain vasculature",muscle
+"hindlimb muscle",muscle
+myotube,muscle
+pancreas,pancreas
+"body of pancreas",pancreas
+testis,reproductive
+ovary,reproductive
+"prostate gland",reproductive
+"foreskin melanocyte",skin
+"foreskin keratinocyte",skin
+"skin of body",skin
+keratinocyte,skin
+"hematopoietic multipotent progenitor cell","stem cell"
+"iPS DF 19.11","stem cell"
+"iPS DF 6.9","stem cell"
+"iPS DF 4.7","stem cell"
+H9,"stem cell"
+"induced pluripotent stem cell","stem cell"
+"iPS DF 19.7","stem cell"
+H1-hESC,"stem cell"
+"stromal cell of bone marrow","stem cell"
+H7-hESC,"stem cell"
+SW480,"cell line"
+G401,"cell line"
+RPMI8226,"cell line"
+EL,"cell line"
+K562,"cell line"
+SJCRH30,"cell line"
+NAMALWA,"cell line"
+Daoy,"cell line"
+ELF-1,"cell line"
+KBM-7,"cell line"
+SJSA1,"cell line"
+"LNCaP clone FGC","cell line"
+"RCC 7860","cell line"
+A549,"cell line"
+ELR,"cell line"
+MCF-7,"cell line"
+WI38,"cell line"
+HL-60,"cell line"
+LoVo,"cell line"
+IMR-90,"cell line"
+NCI-H226,"cell line"
+HepG2,"cell line"
+Karpas-422,"cell line"
+SK-N-SH,"cell line"
+A172,"cell line"
+HAP-1,"cell line"
+RKO,"cell line"
+MG63,"cell line"
+CMK,"cell line"
+HFF-Myc,"cell line"
+L1-S8,"cell line"
+EH,"cell line"
+Caki2,"cell line"
+SK-N-DZ,"cell line"
+BE2C,"cell line"
+Panc1,"cell line"
+HCT116,"cell line"
+"Jurkat clone E61","cell line"
+GM12864,"cell line"
+ACHN,"cell line"
+H4,"cell line"
+HT-29,"cell line"
+HS-5,"cell line"
+WERI-Rb-1,"cell line"
+NT2-D1,"cell line"
+L1-S8R,"cell line"
+OCI-LY7,"cell line"
+GM12878,"cell line"
+MM.1S,"cell line"
+HeLa-S3,"cell line"
+Caco-2,"cell line"
+SK-N-MC,"cell line"
+HS-27A,"cell line"
+PC-9,"cell line"
+A673,"cell line"
+GM06990,"cell line"
+PC-3,"cell line"
+"urinary bladder",other
+adipocyte,other
+"embryonic facial prominence",other
+limb,other
