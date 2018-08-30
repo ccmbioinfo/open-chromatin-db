@@ -196,23 +196,27 @@ class Query extends Component {
   render() { 
     return (
       <div>
-        <h3>Query</h3>
-        <div className={this.state.loading + " loading"}>
-          <h3>Loading...</h3>
-        </div>
-        <fieldset disabled={this.state.disabledInput ? true : false}>
-          <form onSubmit={this.handleSubmit}>
-            <label className="two-third">
-              Region of Interest:
-              <input type="text" onChange={this.handleInputChange} onBlur={this.isValidInput}/>
-              <p className="help">Please format input as following: {"\n"} Chr:StartPos-EndPos</p>
-            </label>
-            <label className="one-third">
-              <button className="btn" type="submit">Submit</button>
-            </label>
-          </form>
-        </fieldset>
-        <p className={!this.state.inputValid ? "alert alert-danger" : ""}>{this.state.inputError}</p>
+        {!this.state.jbrowse &&
+          <div>
+            <h3>Query</h3>
+            <div className={this.state.loading + " loading"}>
+              <h3>Loading...</h3>
+            </div>
+            <fieldset disabled={this.state.disabledInput ? true : false}>
+              <form onSubmit={this.handleSubmit}>
+                <label className="two-third">
+                  Region of Interest:
+                  <input type="text" onChange={this.handleInputChange} onBlur={this.isValidInput}/>
+                  <p className="help">Please format input as following: {"\n"} Chr:StartPos-EndPos</p>
+                </label>
+                <label className="one-third">
+                  <button className="btn" type="submit">Submit</button>
+                </label>
+              </form>
+            </fieldset>
+            <p className={!this.state.inputValid ? "alert alert-danger" : ""}>{this.state.inputError}</p>
+          </div>
+        }
         <div>
           <table ref="main" className="display" />
         </div>
